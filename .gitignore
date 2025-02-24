@@ -52,3 +52,4 @@ android/app/google-services.json
 lib/configs/secrets.dart
 
 android/app/.cxx/*
+ios/Runner/GoogleService-Info.plist
