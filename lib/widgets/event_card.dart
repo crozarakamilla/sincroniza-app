@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sincroniza/models/enums.dart';
 import 'package:sincroniza/models/event.dart';
 
-class EventCard extends StatelessWidget {
+import '../models/category.dart';
+import '../providers/configs/category_provider.dart';
+
+class EventCard extends ConsumerWidget {
   const EventCard({
     super.key,
     required this.event,
@@ -13,7 +17,10 @@ class EventCard extends StatelessWidget {
   final void Function(Event event) onSelectEvent;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Map<CategoryEnum, Category> categoriesValues =
+        ref.read(categoriesProvider);
+
     return Card(
       margin: const EdgeInsets.all(8),
       shape: RoundedRectangleBorder(
@@ -43,7 +50,7 @@ class EventCard extends StatelessWidget {
               Row(
                 children: [
                   Icon(
-                    event.category.name == 'oficial'
+                    event.category == 'oficial'
                         ? Icons.check
                         : Icons.outbond_outlined,
                     size: 15,
@@ -54,12 +61,15 @@ class EventCard extends StatelessWidget {
                     width: 5,
                   ),
                   Text(
-                    categoriesValues[event.category]!,
+                    categoriesValues[event.category == 'oficial'
+                            ? CategoryEnum.oficial
+                            : CategoryEnum.extraordinario]!
+                        .name,
                     style: Theme.of(context).textTheme.titleSmall!.copyWith(
                           color: Theme.of(context).colorScheme.surfaceTint,
                           fontWeight: FontWeight.w900,
                         ),
-                  ),
+                  )
                 ],
               ),
               const SizedBox(

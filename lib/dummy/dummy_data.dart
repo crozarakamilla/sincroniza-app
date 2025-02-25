@@ -1,10 +1,9 @@
-import 'package:sincroniza/models/enums.dart';
 import 'package:sincroniza/models/event.dart';
 
 var eventsList = [
   Event(
     id: 'e1',
-    category: Category.oficial,
+    category: "Oficial",
     startDate: DateTime(2025, 2, 6),
     endDate: DateTime(2025, 2, 3),
     eventDay: DateTime(2025, 2, 6),
@@ -20,7 +19,7 @@ var eventsList = [
   ),
   Event(
     id: 'e2',
-    category: Category.oficial,
+    category: "Oficial",
     startDate: DateTime(2025, 2, 10),
     endDate: DateTime(2025, 2, 13),
     eventDay: DateTime(2025, 2, 13),
@@ -45,7 +44,7 @@ var eventsList = [
   ),
   Event(
     id: 'e3',
-    category: Category.oficial,
+    category: "Oficial",
     startDate: DateTime(2025, 2, 17),
     endDate: DateTime(2025, 2, 20),
     eventDay: DateTime(2025, 2, 20),
@@ -64,7 +63,7 @@ var eventsList = [
   ),
   Event(
     id: 'e4',
-    category: Category.extraordinario,
+    category: "Extraordinário",
     startDate: DateTime(2025, 2, 24),
     endDate: DateTime(2025, 2, 24),
     eventDay: DateTime(2025, 2, 24),
@@ -74,7 +73,7 @@ var eventsList = [
   ),
   Event(
     id: 'e5',
-    category: Category.oficial,
+    category: "Oficial",
     startDate: DateTime(2025, 2, 24),
     endDate: DateTime(2025, 2, 27),
     eventDay: DateTime(2025, 2, 27),
@@ -89,7 +88,7 @@ var eventsList = [
   ),
   Event(
     id: 'e6',
-    category: Category.extraordinario,
+    category: "Extraordinário",
     startDate: DateTime(2025, 3, 6),
     endDate: DateTime(2025, 3, 6),
     eventDay: DateTime(2025, 3, 6),
@@ -99,7 +98,7 @@ var eventsList = [
   ),
   Event(
     id: 'e7',
-    category: Category.oficial,
+    category: "Oficial",
     startDate: DateTime(2025, 3, 31),
     endDate: DateTime(2025, 4, 3),
     eventDay: DateTime(2025, 4, 3),

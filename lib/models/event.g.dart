@@ -14,14 +14,14 @@ _$EventImpl _$$EventImplFromJson(Map<String, dynamic> json) => _$EventImpl(
       eventDay: DateTime.parse(json['eventDay'] as String),
       startTime: DateTime.parse(json['startTime'] as String),
       location: json['location'] as String,
-      category: $enumDecode(_$CategoryEnumMap, json['category']),
+      category: json['category'] as String,
       eventDetails: (json['eventDetails'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
       conductor: json['conductor'] as String?,
       soloist: json['soloist'] as String?,
       participants: (json['participants'] as List<dynamic>?)
-          ?.map((e) => User.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => AppUser.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -34,14 +34,9 @@ Map<String, dynamic> _$$EventImplToJson(_$EventImpl instance) =>
       'eventDay': instance.eventDay.toIso8601String(),
       'startTime': instance.startTime.toIso8601String(),
       'location': instance.location,
-      'category': _$CategoryEnumMap[instance.category]!,
+      'category': instance.category,
       'eventDetails': instance.eventDetails,
       'conductor': instance.conductor,
       'soloist': instance.soloist,
       'participants': instance.participants,
     };
-
-const _$CategoryEnumMap = {
-  Category.oficial: 'oficial',
-  Category.extraordinario: 'extraordinario',
-};

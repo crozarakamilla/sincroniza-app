@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-import '../models/user.dart';
+import '../models/app_user.dart';
 
 class UsersInEvent extends StatelessWidget {
   const UsersInEvent({super.key, required this.users});
 
-  final List<User> users;
+  final List<AppUser> users;
 
   @override
   Widget build(BuildContext context) {

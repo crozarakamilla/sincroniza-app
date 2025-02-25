@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../providers/users/auth_provider.dart';
+import 'package:sincroniza/providers/users/auth_controller.dart';
 
 class CustomDrawer extends ConsumerWidget {
   const CustomDrawer({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authController = ref.read(authControllerProvider.notifier);
-
     return Drawer(
       child: Column(
         children: [
@@ -79,7 +76,8 @@ class CustomDrawer extends ConsumerWidget {
                     fontSize: 22,
                   ),
             ),
-            onTap: () {
+            onTap: () async {
+              await ref.read(authControllerProvider.notifier).signOut();
               context.goNamed('new-event');
             },
           ),
@@ -111,8 +109,8 @@ class CustomDrawer extends ConsumerWidget {
                     fontSize: 22,
                   ),
             ),
-            onTap: () {
-              authController.signOut();
+            onTap: () async {
+              await ref.read(authControllerProvider.notifier).signOut();
               context.goNamed('auth');
             },
           ),

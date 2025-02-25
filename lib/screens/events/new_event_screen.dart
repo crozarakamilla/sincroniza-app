@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:sincroniza/models/category.dart';
 import 'package:sincroniza/models/enums.dart';
+import 'package:sincroniza/models/event.dart';
 import 'package:sincroniza/widgets/add_program_widget.dart';
 import 'package:sincroniza/widgets/custom_app_bar.dart';
 
 import '../../providers/configs/category_provider.dart';
+import '../../providers/events/event_provider.dart';
 import '../../widgets/custom_drawer.dart';
 
 class NewEventScreen extends ConsumerStatefulWidget {
@@ -48,14 +52,31 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
 
     _form.currentState!.save();
 
-    try {} catch (error) {
-      if (error == 'email-already-in-use') {
-        // ...
-      }
+    try {
+      DateTime startDateTime = DateTime(
+        startDate.year,
+        startDate.month,
+        startDate.day,
+        startTime.hour,
+        startTime.minute,
+      );
+
+      Event newEvent = Event(
+        id: '1',
+        title: title,
+        startDate: startDate,
+        endDate: endDate,
+        eventDay: endDate,
+        startTime: startDateTime,
+        location: location,
+        category: category,
+      );
+      ref.read(asyncEventsProvider.notifier).newEvent(newEvent);
+    } catch (error) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Authentication failed.'),
+          content: Text('Erro ao salvar evento.'),
         ),
       );
     }
@@ -104,530 +125,575 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Map<Category, String> categories = ref.read(categoriesProvider);
-    return Scaffold(
-      appBar: const CustomAppBar(title: 'Novo Evento'),
-      drawer: const CustomDrawer(),
-      backgroundColor: Theme.of(context).colorScheme.primaryFixedDim,
-      body: Padding(
-        padding:
-            const EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Form(
-                key: _form,
+    final Map<CategoryEnum, Category> categories = ref.read(categoriesProvider);
+    return Consumer(builder: (context, ref, child) {
+      final asyncEvents = ref.watch(asyncEventsProvider);
+      return asyncEvents.when(
+        data: (data) {
+          if (data != null) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.goNamed('events');
+            });
+          }
+          return Scaffold(
+            appBar: const CustomAppBar(title: 'Novo Evento'),
+            drawer: const CustomDrawer(),
+            backgroundColor: Theme.of(context).colorScheme.primaryFixedDim,
+            body: Padding(
+              padding: const EdgeInsets.only(
+                  top: 10, left: 10, right: 10, bottom: 10),
+              child: SingleChildScrollView(
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Nome',
-                        border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(10), // Rounded corners
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
-                        ),
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
-                              width: 2), // Focus effect
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 20),
-                      ),
-                      keyboardType: TextInputType.text,
-                      autocorrect: false,
-                      textCapitalization: TextCapitalization.none,
-                      validator: (value) {
-                        if (value == null ||
-                            value.trim().isEmpty ||
-                            value.length < 4) {
-                          return 'Por favor, insira um nome válido.';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        title = value;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 18,
-                    ),
-                    DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        labelText: 'Categoria',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
-                        ),
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
-                              width: 2), // Focus effect
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 20),
-                      ),
-                      value: category,
-                      items: categories.entries.map((entry) {
-                        return DropdownMenuItem<String>(
-                          value: entry.key.toString(),
-                          child: Text(entry.value),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          category = newValue;
-                        });
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {}
-                        return null;
-                      },
-                      onSaved: (value) {
-                        category = value;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 18,
-                    ),
-                    TextFormField(
-                      controller: _startDateController,
-                      onTap: () async {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        await _selectDate(
-                            context, _startDateController, DateType.startDate);
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Data inicial',
-                        border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(10), // Rounded corners
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
-                        ),
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
-                              width: 2), // Focus effect
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 20),
-                      ),
-                      keyboardType: TextInputType.text,
-                      autocorrect: false,
-                      textCapitalization: TextCapitalization.none,
-                      validator: (value) {
-                        if (value == null ||
-                            value.trim().isEmpty ||
-                            value.length < 4) {
-                          return 'Por favor, insira um nome válido.';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        title = value;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 18,
-                    ),
-                    TextFormField(
-                      controller: _endDateController,
-                      onTap: () async {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        await _selectDate(
-                            context, _endDateController, DateType.endDate);
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Data final',
-                        border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(10), // Rounded corners
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
-                        ),
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
-                              width: 2), // Focus effect
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 20),
-                      ),
-                      keyboardType: TextInputType.text,
-                      autocorrect: false,
-                      textCapitalization: TextCapitalization.none,
-                      validator: (value) {
-                        if (value == null ||
-                            value.trim().isEmpty ||
-                            value.length < 4) {
-                          return 'Por favor, insira um nome válido.';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        title = value;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 18,
-                    ),
-                    TextFormField(
-                      controller: _timeController,
-                      onTap: () async {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        await _selectTime(context);
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Horário do evento',
-                        border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(10), // Rounded corners
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
-                        ),
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
-                              width: 2), // Focus effect
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 20),
-                      ),
-                      keyboardType: TextInputType.text,
-                      autocorrect: false,
-                      textCapitalization: TextCapitalization.none,
-                      validator: (value) {
-                        if (value == null ||
-                            value.trim().isEmpty ||
-                            value.length < 4) {
-                          return 'Por favor, insira um nome válido.';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        title = value;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 18,
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Local do evento',
-                        border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(10), // Rounded corners
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
-                        ),
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
-                              width: 2), // Focus effect
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 20),
-                      ),
-                      keyboardType: TextInputType.text,
-                      autocorrect: false,
-                      textCapitalization: TextCapitalization.none,
-                      validator: (value) {
-                        if (value == null ||
-                            value.trim().isEmpty ||
-                            value.length < 4) {
-                          return 'Por favor, insira um nome válido.';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        location = value;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 18,
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Regente',
-                        border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(10), // Rounded corners
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
-                        ),
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
-                              width: 2), // Focus effect
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 20),
-                      ),
-                      keyboardType: TextInputType.text,
-                      autocorrect: false,
-                      textCapitalization: TextCapitalization.none,
-                      validator: (value) {
-                        if (value == null ||
-                            value.trim().isEmpty ||
-                            value.length < 4) {
-                          return 'Por favor, insira um nome válido.';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        conductor = value;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 18,
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Solista(s)',
-                        border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(10), // Rounded corners
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
-                        ),
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
-                              width: 2), // Focus effect
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 20),
-                      ),
-                      keyboardType: TextInputType.text,
-                      autocorrect: false,
-                      textCapitalization: TextCapitalization.none,
-                      validator: (value) {
-                        if (value == null ||
-                            value.trim().isEmpty ||
-                            value.length < 4) {
-                          return 'Por favor, insira um nome válido.';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        soloist = value;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Programação",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge!
-                              .copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            color: Theme.of(context).colorScheme.surfaceBright,
-                            thickness: 1,
+                    Form(
+                      key: _form,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'Nome',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                // Rounded corners
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer),
+                              ),
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer,
+                                    width: 2), // Focus effect
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 20),
+                            ),
+                            keyboardType: TextInputType.text,
+                            autocorrect: false,
+                            textCapitalization: TextCapitalization.none,
+                            validator: (value) {
+                              if (value == null ||
+                                  value.trim().isEmpty ||
+                                  value.length < 4) {
+                                return 'Por favor, insira um nome válido.';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              title = value;
+                            },
                           ),
-                        ),
-                      ],
-                    ),
-                    if (programList.isNotEmpty)
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: programList.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(
-                              programList[index],
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge!
-                                  .copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
+                          const SizedBox(
+                            height: 18,
+                          ),
+                          DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                              labelText: 'Categoria',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer),
+                              ),
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer,
+                                    width: 2), // Focus effect
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 20),
                             ),
-                            trailing: Icon(
-                              Icons.remove_circle,
-                              color: Theme.of(context).colorScheme.error,
-                              size: 30,
-                            ),
-                            onTap: () {
+                            value: category,
+                            items: categories.entries.map((entry) {
+                              return DropdownMenuItem<String>(
+                                value: entry.key.toString(),
+                                child: Text(entry.value.name),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
                               setState(() {
-                                programList.removeAt(index);
+                                category = newValue;
                               });
                             },
-                          );
-                        },
-                      ),
-                    const SizedBox(
-                      height: 18,
-                    ),
-                    AddProgramWidget(
-                      addItem: addProgramItem,
-                    ),
-                    const SizedBox(
-                      height: 18,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            color: Theme.of(context).colorScheme.surfaceBright,
-                            thickness: 1,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {}
+                              return null;
+                            },
+                            onSaved: (value) {
+                              category = value;
+                            },
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    ElevatedButton(
-                      onPressed: _submit,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                      ),
-                      child: Text(
-                        'Cadastrar',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium!
-                            .copyWith(
-                              color:
-                                  Theme.of(context).colorScheme.surfaceBright,
-                              fontWeight: FontWeight.bold,
+                          const SizedBox(
+                            height: 18,
+                          ),
+                          TextFormField(
+                            controller: _startDateController,
+                            onTap: () async {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              await _selectDate(context, _startDateController,
+                                  DateType.startDate);
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Data inicial',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                // Rounded corners
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer),
+                              ),
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer,
+                                    width: 2), // Focus effect
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 20),
                             ),
+                            keyboardType: TextInputType.text,
+                            autocorrect: false,
+                            textCapitalization: TextCapitalization.none,
+                            validator: (value) {
+                              if (value == null ||
+                                  value.trim().isEmpty ||
+                                  value.length < 4) {
+                                return 'Por favor, insira um nome válido.';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              title = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 18,
+                          ),
+                          TextFormField(
+                            controller: _endDateController,
+                            onTap: () async {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              await _selectDate(context, _endDateController,
+                                  DateType.endDate);
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Data final',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                // Rounded corners
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer),
+                              ),
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer,
+                                    width: 2), // Focus effect
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 20),
+                            ),
+                            keyboardType: TextInputType.text,
+                            autocorrect: false,
+                            textCapitalization: TextCapitalization.none,
+                            validator: (value) {
+                              if (value == null ||
+                                  value.trim().isEmpty ||
+                                  value.length < 4) {
+                                return 'Por favor, insira um nome válido.';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              title = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 18,
+                          ),
+                          TextFormField(
+                            controller: _timeController,
+                            onTap: () async {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              await _selectTime(context);
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Horário do evento',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                // Rounded corners
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer),
+                              ),
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer,
+                                    width: 2), // Focus effect
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 20),
+                            ),
+                            keyboardType: TextInputType.text,
+                            autocorrect: false,
+                            textCapitalization: TextCapitalization.none,
+                            validator: (value) {
+                              if (value == null ||
+                                  value.trim().isEmpty ||
+                                  value.length < 4) {
+                                return 'Por favor, insira um nome válido.';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              title = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 18,
+                          ),
+                          TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'Local do evento',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                // Rounded corners
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer),
+                              ),
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer,
+                                    width: 2), // Focus effect
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 20),
+                            ),
+                            keyboardType: TextInputType.text,
+                            autocorrect: false,
+                            textCapitalization: TextCapitalization.none,
+                            validator: (value) {
+                              if (value == null ||
+                                  value.trim().isEmpty ||
+                                  value.length < 4) {
+                                return 'Por favor, insira um nome válido.';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              location = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 18,
+                          ),
+                          TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'Regente',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                // Rounded corners
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer),
+                              ),
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer,
+                                    width: 2), // Focus effect
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 20),
+                            ),
+                            keyboardType: TextInputType.text,
+                            autocorrect: false,
+                            textCapitalization: TextCapitalization.none,
+                            validator: (value) {
+                              if (value == null ||
+                                  value.trim().isEmpty ||
+                                  value.length < 4) {
+                                return 'Por favor, insira um nome válido.';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              conductor = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 18,
+                          ),
+                          TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'Solista(s)',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                // Rounded corners
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer),
+                              ),
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer,
+                                    width: 2), // Focus effect
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainer),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 20),
+                            ),
+                            keyboardType: TextInputType.text,
+                            autocorrect: false,
+                            textCapitalization: TextCapitalization.none,
+                            validator: (value) {
+                              if (value == null ||
+                                  value.trim().isEmpty ||
+                                  value.length < 4) {
+                                return 'Por favor, insira um nome válido.';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              soloist = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Programação",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge!
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Divider(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .surfaceBright,
+                                  thickness: 1,
+                                ),
+                              ),
+                            ],
+                          ),
+                          if (programList.isNotEmpty)
+                            ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: programList.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  title: Text(
+                                    programList[index],
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge!
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                  ),
+                                  trailing: Icon(
+                                    Icons.remove_circle,
+                                    color: Theme.of(context).colorScheme.error,
+                                    size: 30,
+                                  ),
+                                  onTap: () {
+                                    setState(() {
+                                      programList.removeAt(index);
+                                    });
+                                  },
+                                );
+                              },
+                            ),
+                          const SizedBox(
+                            height: 18,
+                          ),
+                          AddProgramWidget(
+                            addItem: addProgramItem,
+                          ),
+                          const SizedBox(
+                            height: 18,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Divider(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .surfaceBright,
+                                  thickness: 1,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          ElevatedButton(
+                            onPressed: _submit,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                            ),
+                            child: Text(
+                              'Cadastrar',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceBright,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 35,
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
+            ),
+          );
+        },
+        error: (error, stack) => const Scaffold(
+          appBar: CustomAppBar(title: "Novo evento"),
+          drawer: CustomDrawer(),
+          body: Center(
+            child: Text('Erro ao salvar evento.'),
           ),
         ),
-      ),
-    );
+        loading: () => const Scaffold(
+          appBar: CustomAppBar(title: "Novo evento"),
+          drawer: CustomDrawer(),
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      );
+    });
   }
 }

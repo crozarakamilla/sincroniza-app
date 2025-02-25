@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../models/user.dart' as model;
+import '../models/app_user.dart';
 
 final _firebaseAuth = FirebaseAuth.instance;
 final _firestore = FirebaseFirestore.instance;
 
 class UserRepository {
-  Future<model.User?> saveUserData(model.User user) async {
+  Future<AppUser?> saveUserData(AppUser user) async {
     // Save the user to the database
     try {
       await _firestore.collection('users').doc(user.uid).set({

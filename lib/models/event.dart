@@ -1,8 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
-import 'package:sincroniza/models/user.dart';
-
-import 'enums.dart';
+import 'package:sincroniza/models/app_user.dart';
 
 part 'event.freezed.dart';
 part 'event.g.dart';
@@ -19,11 +17,11 @@ class Event with _$Event {
     required DateTime eventDay,
     required DateTime startTime,
     required String location,
-    required Category category,
+    required String category,
     List<String>? eventDetails,
     String? conductor,
     String? soloist,
-    List<User>? participants,
+    List<AppUser>? participants,
   }) = _Event;
 
   const Event._();
@@ -40,7 +38,7 @@ class Event with _$Event {
     return formatter.format(eventDay);
   }
 
-  List<User>? participantsInEvent(List<String> groupUsersList) {
+  List<AppUser>? participantsInEvent(List<String> groupUsersList) {
     return participants
         ?.where(
           (part) => groupUsersList.any((user) => part == user),

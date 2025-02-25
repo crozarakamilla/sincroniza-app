@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sincroniza/models/app_user.dart';
 import 'package:sincroniza/models/event.dart';
-import 'package:sincroniza/models/user.dart';
 import 'package:sincroniza/widgets/custom_app_bar.dart';
 import 'package:sincroniza/widgets/custom_drawer.dart';
 import 'package:sincroniza/widgets/event_details_list.dart';
@@ -13,7 +13,7 @@ class EventDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<User> users = [];
+    final List<AppUser> users = [];
 
     return Scaffold(
       appBar: CustomAppBar(title: event.title),

@@ -1,12 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user.dart';
+part of 'app_user.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
+_$AppUserImpl _$$AppUserImplFromJson(Map<String, dynamic> json) =>
+    _$AppUserImpl(
       uid: json['uid'] as String,
       name: json['name'] as String,
       groupId: json['groupId'] as String,
@@ -14,7 +15,7 @@ _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
       photoUrl: json['photoUrl'] as String,
     );
 
-Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
+Map<String, dynamic> _$$AppUserImplToJson(_$AppUserImpl instance) =>
     <String, dynamic>{
       'uid': instance.uid,
       'name': instance.name,
