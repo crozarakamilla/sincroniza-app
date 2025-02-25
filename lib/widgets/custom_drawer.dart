@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sincroniza/providers/users/auth_controller.dart';
+import 'package:sincroniza/routing/app_route_enum.dart';
+
+import '../controllers/users/auth_controller.dart';
 
 class CustomDrawer extends ConsumerWidget {
   const CustomDrawer({super.key});
@@ -60,7 +62,7 @@ class CustomDrawer extends ConsumerWidget {
                   ),
             ),
             onTap: () {
-              context.goNamed('events');
+              context.goNamed(AppRoutes.events.name);
             },
           ),
           ListTile(
@@ -77,8 +79,7 @@ class CustomDrawer extends ConsumerWidget {
                   ),
             ),
             onTap: () async {
-              await ref.read(authControllerProvider.notifier).signOut();
-              context.goNamed('new-event');
+              context.goNamed(AppRoutes.events.name);
             },
           ),
           ListTile(
@@ -111,7 +112,10 @@ class CustomDrawer extends ConsumerWidget {
             ),
             onTap: () async {
               await ref.read(authControllerProvider.notifier).signOut();
-              context.goNamed('auth');
+              if (!context.mounted) {
+                return;
+              }
+              context.goNamed(AppRoutes.signIn.name);
             },
           ),
         ],

@@ -10,7 +10,7 @@ extension AppRoutesExtension on AppRoutes {
   String get path {
     switch (this) {
       case AppRoutes.events:
-        return '/';
+        return '/events';
       case AppRoutes.signIn:
         return '/signin';
       case AppRoutes.signUp:
@@ -25,15 +25,15 @@ extension AppRoutesExtension on AppRoutes {
   String get routeName {
     switch (this) {
       case AppRoutes.events:
-        return 'Eventos';
+        return 'events';
       case AppRoutes.signIn:
-        return '/Entrar';
+        return 'sign-in';
       case AppRoutes.signUp:
-        return '/Cadastrar';
+        return 'sing-up';
       case AppRoutes.eventDetail:
-        return '/Evento';
+        return 'event-detail';
       case AppRoutes.newEvent:
-        return '/Novo Evento';
+        return 'new-event';
     }
   }
 }

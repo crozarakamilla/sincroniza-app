@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sincroniza/models/loading_state.dart';
 
-import '../../repositories/firebase_auth_repository.dart';
+import '../../repositories/user/firebase_auth_repository.dart';
+import '../storage/storage_controller.dart';
 
 part 'auth_controller.g.dart';
 
@@ -35,11 +39,18 @@ class AuthController extends _$AuthController {
   }
 
   Future<void> createUserWithEmailAndPassword(
-      String email, String password, String name) async {
+      String email, String password, String name, File? enteredImage) async {
     state = const LoadingState(LoadingStateEnum.loading, null);
     try {
       final authRepository = ref.watch(authRepositoryProvider);
-      await authRepository.signUpWithEmail(email, password, name);
+      final UserCredential? userCredential =
+          await authRepository.signUpWithEmail(email, password, name);
+
+      if (userCredential != null && enteredImage != null) {
+        final storageController = ref.read(storageControllerProvider.notifier);
+        await storageController.uploadFile(userCredential, enteredImage);
+      }
+
       state = const LoadingState(LoadingStateEnum.success, null);
     } on Exception catch (e) {
       state = LoadingState(LoadingStateEnum.error, e);

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sign_button/sign_button.dart';
-import 'package:sincroniza/providers/users/auth_controller.dart';
+import 'package:sincroniza/routing/app_route_enum.dart';
+
+import '../../controllers/users/auth_controller.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
@@ -17,7 +19,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
   BuildContext? _progressIndicatorContext;
 
-  void _validate() {
+  bool _validate() {
     if (_emailController.text == null ||
         _emailController.text.trim().isEmpty ||
         !_emailController.text.contains('@')) {
@@ -27,6 +29,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           content: Text('Por favor, insira um e-mail válido'),
         ),
       );
+      return false;
     }
     if (_passwordController == null ||
         _passwordController.text.trim().length < 6) {
@@ -36,11 +39,15 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           content: Text('Por favor, insira um e-mail válido'),
         ),
       );
+      return false;
     }
+    return true;
   }
 
   Future<void> _signIn() async {
-    _validate();
+    if (!_validate()) {
+      return;
+    }
     final auth = ref.read(authControllerProvider.notifier);
     await auth.signInWithEmailAndPassword(
       _emailController.text.trim(),
@@ -243,9 +250,12 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                                 fontWeight: FontWeight.bold),
                       ),
                     ),
+                    const SizedBox(
+                      height: 30,
+                    ),
                     TextButton(
                       onPressed: () {
-                        context.goNamed('sign-up');
+                        context.goNamed(AppRoutes.signUp.routeName);
                       },
                       child: Text(
                         'Não tem uma conta?',
@@ -253,15 +263,16 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                             .textTheme
                             .titleMedium!
                             .copyWith(
-                                color:
-                                    Theme.of(context).colorScheme.surfaceBright,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13.0,
-                                decoration: TextDecoration.underline),
+                              color:
+                                  Theme.of(context).colorScheme.surfaceBright,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15.0,
+                              decoration: TextDecoration.underline,
+                            ),
                       ),
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 18,
                     ),
                     Column(
                       children: [

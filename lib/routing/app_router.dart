@@ -4,10 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sincroniza/routing/refresh_listenable.dart';
 import 'package:sincroniza/screens/events/events_screen.dart';
+import 'package:sincroniza/screens/events/new_event_screen.dart';
 import 'package:sincroniza/screens/users/auth_screen.dart';
 import 'package:sincroniza/screens/users/sign_up_screen.dart';
 
-import '../repositories/firebase_auth_repository.dart';
+import '../repositories/user/firebase_auth_repository.dart';
 import 'app_route_enum.dart';
 
 part 'app_router.g.dart';
@@ -40,6 +41,13 @@ GoRouter router(Ref ref) {
         name: AppRoutes.signUp.routeName,
         pageBuilder: (context, state) => const MaterialPage(
           child: SignUpScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.newEvent.path,
+        name: AppRoutes.newEvent.name,
+        pageBuilder: (context, state) => const MaterialPage(
+          child: NewEventScreen(),
         ),
       ),
     ],

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sincroniza/dummy/dummy_data.dart';
 import 'package:sincroniza/models/event.dart';
+import 'package:sincroniza/routing/app_route_enum.dart';
 import 'package:sincroniza/screens/events/event_detail_screen.dart';
 import 'package:sincroniza/widgets/custom_app_bar.dart';
 import 'package:sincroniza/widgets/custom_drawer.dart';
@@ -60,6 +62,12 @@ class EventsScreen extends StatelessWidget {
       appBar: const CustomAppBar(title: 'Eventos'),
       drawer: const CustomDrawer(),
       body: content,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.pushNamed(AppRoutes.newEvent.name);
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:http/http.dart' as http;
 
-import '../models/event.dart';
+import '../../models/event.dart';
+
+//part 'event_repository.g.dart';
 
 class EventRepository {
   Future<http.Response> fetchEvents() async {

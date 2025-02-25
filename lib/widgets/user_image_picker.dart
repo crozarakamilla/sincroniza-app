@@ -43,12 +43,16 @@ class _UserImagePickerState extends State<UserImagePicker> {
           onPressed: _pickImage,
           icon: Icon(
             Icons.image,
-            color: Theme.of(context).colorScheme.surfaceBright,
+            color: Theme.of(context).colorScheme.primary,
+            size: 20,
           ),
           label: Text(
             'Adicionar foto',
-            style:
-                TextStyle(color: Theme.of(context).colorScheme.surfaceBright),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],

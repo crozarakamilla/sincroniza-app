@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sincroniza/models/enums.dart';
 import 'package:sincroniza/models/event.dart';
 
+import '../controllers/configs/category_provider.dart';
 import '../models/category.dart';
-import '../providers/configs/category_provider.dart';
 
 class EventCard extends ConsumerWidget {
   const EventCard({
