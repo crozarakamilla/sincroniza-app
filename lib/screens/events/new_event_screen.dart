@@ -12,7 +12,6 @@ import 'package:sincroniza/widgets/custom_app_bar.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../controllers/configs/category_provider.dart';
-import '../../widgets/custom_drawer.dart';
 
 class NewEventScreen extends ConsumerStatefulWidget {
   const NewEventScreen({super.key});
@@ -85,6 +84,12 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
     );
     final eventController = ref.read(eventControllerProvider.notifier);
     await eventController.postEvent(newEvent);
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Evento adicionado!')),
+      );
+      Navigator.of(context).pop();
+    }
   }
 
   Future<void> _selectDate(BuildContext context,
@@ -184,8 +189,7 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
     });
 
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Novo Evento'),
-      drawer: const CustomDrawer(),
+      appBar: CustomAppBar(title: "Novo evento"),
       backgroundColor: Theme.of(context).colorScheme.primaryFixedDim,
       body: Padding(
         padding:

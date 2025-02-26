@@ -10,9 +10,9 @@ FirebaseFirestore firebaseFirestore(Ref ref) {
 }
 
 @riverpod
-FirebaseFirestoreRepository firestoreRepository(Ref ref) {
+FirebaseFirestore firestoreRepository(Ref ref) {
   final database = ref.watch(firebaseFirestoreProvider);
-  return FirebaseFirestoreRepository(database);
+  return FirebaseFirestoreRepository(database).database;
 }
 
 class FirebaseFirestoreRepository {
@@ -20,8 +20,5 @@ class FirebaseFirestoreRepository {
 
   final FirebaseFirestore _firebaseFirestore;
 
-  Future<void> postRecord(
-      String collectionName, String docName, Map<String, dynamic> data) async {
-    return _firebaseFirestore.collection(collectionName).doc(docName).set(data);
-  }
+  FirebaseFirestore get database => _firebaseFirestore;
 }

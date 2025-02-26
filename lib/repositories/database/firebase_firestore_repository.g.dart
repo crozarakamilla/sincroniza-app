@@ -25,12 +25,12 @@ final firebaseFirestoreProvider =
 // ignore: unused_element
 typedef FirebaseFirestoreRef = AutoDisposeProviderRef<FirebaseFirestore>;
 String _$firestoreRepositoryHash() =>
-    r'11a7749444c14c7328fd403bbe62f378e2fb0700';
+    r'e54516fa3518d162190c2a1f3773216535fecfc2';
 
 /// See also [firestoreRepository].
 @ProviderFor(firestoreRepository)
 final firestoreRepositoryProvider =
-    AutoDisposeProvider<FirebaseFirestoreRepository>.internal(
+    AutoDisposeProvider<FirebaseFirestore>.internal(
   firestoreRepository,
   name: r'firestoreRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -42,7 +42,6 @@ final firestoreRepositoryProvider =
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef FirestoreRepositoryRef
-    = AutoDisposeProviderRef<FirebaseFirestoreRepository>;
+typedef FirestoreRepositoryRef = AutoDisposeProviderRef<FirebaseFirestore>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
