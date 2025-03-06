@@ -9,9 +9,8 @@ class AppUser with _$AppUser {
   const factory AppUser({
     required String uid,
     required String name,
-    required String groupId,
     required String email,
-    required String photoUrl,
+    String? photoUrl,
   }) = _AppUser;
 
   static AppUser? fromUser(User? user) {
@@ -19,9 +18,8 @@ class AppUser with _$AppUser {
     return AppUser(
       uid: user.uid,
       name: user.displayName ?? '',
-      groupId: '',
       email: user.email ?? '',
-      photoUrl: user.photoURL ?? '',
+      photoUrl: user.photoURL,
     );
   }
 

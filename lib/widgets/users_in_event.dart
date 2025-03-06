@@ -15,7 +15,7 @@ class UsersInEvent extends StatelessWidget {
         itemCount: users.length,
         itemBuilder: (ctx, index) => Card(
           child: Padding(
-            padding: const EdgeInsets.all(6),
+            padding: const EdgeInsets.all(5),
             child: Row(
               spacing: 4,
               children: [
@@ -28,7 +28,7 @@ class UsersInEvent extends StatelessWidget {
                   width: 8,
                 ),
                 Text(
-                  'Test',
+                  users[index].name,
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.bold,

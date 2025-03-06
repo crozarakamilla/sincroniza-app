@@ -15,13 +15,14 @@ _$EventImpl _$$EventImplFromJson(Map<String, dynamic> json) => _$EventImpl(
       startTime: DateTime.parse(json['startTime'] as String),
       location: json['location'] as String,
       category: json['category'] as String,
+      groupId: json['groupId'] as String,
       eventDetails: (json['eventDetails'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
       conductor: json['conductor'] as String?,
       soloist: json['soloist'] as String?,
       participants: (json['participants'] as List<dynamic>?)
-          ?.map((e) => AppUser.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => e as String)
           .toList(),
     );
 
@@ -35,6 +36,7 @@ Map<String, dynamic> _$$EventImplToJson(_$EventImpl instance) =>
       'startTime': instance.startTime.toIso8601String(),
       'location': instance.location,
       'category': instance.category,
+      'groupId': instance.groupId,
       'eventDetails': instance.eventDetails,
       'conductor': instance.conductor,
       'soloist': instance.soloist,

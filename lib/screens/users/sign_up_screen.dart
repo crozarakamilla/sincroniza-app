@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sincroniza/widgets/custom_app_bar.dart';
 import 'package:sincroniza/widgets/user_image_picker.dart';
 
-import '../../controllers/users/auth_controller.dart';
+import '../../controllers/users/firebase_auth_controller.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
@@ -117,7 +117,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       }
     });
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Criar Conta'),
+      appBar: CustomAppBar(
+        title: 'Criar Conta',
+        showDefaultActions: false,
+      ),
       backgroundColor: Theme.of(context).colorScheme.primaryFixedDim,
       body: Padding(
         padding:

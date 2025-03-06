@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sincroniza/routing/app_route_enum.dart';
 
-import '../controllers/users/auth_controller.dart';
+import '../controllers/users/firebase_auth_controller.dart';
 
 class CustomDrawer extends ConsumerWidget {
   const CustomDrawer({super.key});
@@ -63,6 +63,7 @@ class CustomDrawer extends ConsumerWidget {
             ),
             onTap: () {
               context.goNamed(AppRoutes.events.name);
+              Navigator.of(context).pop();
             },
           ),
           ListTile(
@@ -79,7 +80,7 @@ class CustomDrawer extends ConsumerWidget {
                   ),
             ),
             onTap: () async {
-              context.goNamed(AppRoutes.events.name);
+              context.pushNamed(AppRoutes.newEvent.name);
             },
           ),
           ListTile(
@@ -96,6 +97,23 @@ class CustomDrawer extends ConsumerWidget {
                   ),
             ),
             onTap: () {},
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.group_sharp,
+              size: 26,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            title: Text(
+              'Grupos',
+              style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontSize: 22,
+                  ),
+            ),
+            onTap: () async {
+              context.pushNamed(AppRoutes.groups.name);
+            },
           ),
           ListTile(
             leading: Icon(

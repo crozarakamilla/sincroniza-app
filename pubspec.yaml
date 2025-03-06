@@ -51,7 +51,7 @@ flutter:
     - assets/images/
 
 flutter_native_splash:
-  color: "#202541"
+  color: "#1F3339"
   image: assets/images/splash_image.png
   fullscreen: false
   android: true
@@ -61,8 +61,8 @@ flutter_native_splash:
   android_12:
     fullscreen: true
     image: assets/images/splash_image.png
-    color: "#202541"
-    icon_background_color: "#202541"
+    color: "#1F3339"
+    icon_background_color: "#1F3339"
     android_gravity: center
     ios_content_mode: center
 

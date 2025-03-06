@@ -36,7 +36,7 @@ class _EventDetailsListState extends State<EventDetailsList> {
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.bold,
-                          fontSize: 11.0,
+                          fontSize: 14.0,
                         ),
                   ),
                 ),

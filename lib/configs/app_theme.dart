@@ -1,7 +1,6 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 /// The [AppTheme] defines light and dark themes for the app.
 ///
@@ -9,23 +8,22 @@ import 'package:google_fonts/google_fonts.dart';
 /// Use same major flex_color_scheme package version. If you use a
 /// lower minor version, some properties may not be supported.
 /// In that case, remove them after copying this theme to your
-/// app or upgrade package to version 8.1.0.
+/// app or upgrade package to version 8.1.1.
 ///
 /// Use in [MaterialApp] like this:
 ///
 /// MaterialApp(
 ///   theme: AppTheme.light,
 ///   darkTheme: AppTheme.dark,
-///     :
 /// );
 abstract final class AppTheme {
   // The defined light theme.
   static ThemeData light = FlexThemeData.light(
-    scheme: FlexScheme.ebonyClay,
-    fontFamily: GoogleFonts.inter().fontFamily,
+    scheme: FlexScheme.outerSpace,
     subThemesData: const FlexSubThemesData(
       interactionEffects: true,
       tintedDisabledControls: true,
+      useMaterial3Typography: true,
       useM2StyleDividerInM3: true,
       inputDecoratorIsFilled: true,
       inputDecoratorBorderType: FlexInputBorderType.outline,
@@ -36,14 +34,15 @@ abstract final class AppTheme {
     visualDensity: FlexColorScheme.comfortablePlatformDensity,
     cupertinoOverrideTheme: const CupertinoThemeData(applyThemeToAll: true),
   );
+
   // The defined dark theme.
   static ThemeData dark = FlexThemeData.dark(
-    scheme: FlexScheme.ebonyClay,
-    fontFamily: GoogleFonts.inter().fontFamily,
+    scheme: FlexScheme.outerSpace,
     subThemesData: const FlexSubThemesData(
       interactionEffects: true,
       tintedDisabledControls: true,
       blendOnColors: true,
+      useMaterial3Typography: true,
       useM2StyleDividerInM3: true,
       inputDecoratorIsFilled: true,
       inputDecoratorBorderType: FlexInputBorderType.outline,

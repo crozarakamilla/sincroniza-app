@@ -10,16 +10,14 @@ _$AppUserImpl _$$AppUserImplFromJson(Map<String, dynamic> json) =>
     _$AppUserImpl(
       uid: json['uid'] as String,
       name: json['name'] as String,
-      groupId: json['groupId'] as String,
       email: json['email'] as String,
-      photoUrl: json['photoUrl'] as String,
+      photoUrl: json['photoUrl'] as String?,
     );
 
 Map<String, dynamic> _$$AppUserImplToJson(_$AppUserImpl instance) =>
     <String, dynamic>{
       'uid': instance.uid,
       'name': instance.name,
-      'groupId': instance.groupId,
       'email': instance.email,
       'photoUrl': instance.photoUrl,
     };

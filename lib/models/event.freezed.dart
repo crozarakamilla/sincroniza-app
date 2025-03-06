@@ -28,10 +28,11 @@ mixin _$Event {
   DateTime get startTime => throw _privateConstructorUsedError;
   String get location => throw _privateConstructorUsedError;
   String get category => throw _privateConstructorUsedError;
+  String get groupId => throw _privateConstructorUsedError;
   List<String>? get eventDetails => throw _privateConstructorUsedError;
   String? get conductor => throw _privateConstructorUsedError;
   String? get soloist => throw _privateConstructorUsedError;
-  List<AppUser>? get participants => throw _privateConstructorUsedError;
+  List<String>? get participants => throw _privateConstructorUsedError;
 
   /// Serializes this Event to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -56,10 +57,11 @@ abstract class $EventCopyWith<$Res> {
       DateTime startTime,
       String location,
       String category,
+      String groupId,
       List<String>? eventDetails,
       String? conductor,
       String? soloist,
-      List<AppUser>? participants});
+      List<String>? participants});
 }
 
 /// @nodoc
@@ -85,6 +87,7 @@ class _$EventCopyWithImpl<$Res, $Val extends Event>
     Object? startTime = null,
     Object? location = null,
     Object? category = null,
+    Object? groupId = null,
     Object? eventDetails = freezed,
     Object? conductor = freezed,
     Object? soloist = freezed,
@@ -123,6 +126,10 @@ class _$EventCopyWithImpl<$Res, $Val extends Event>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as String,
+      groupId: null == groupId
+          ? _value.groupId
+          : groupId // ignore: cast_nullable_to_non_nullable
+              as String,
       eventDetails: freezed == eventDetails
           ? _value.eventDetails
           : eventDetails // ignore: cast_nullable_to_non_nullable
@@ -138,7 +145,7 @@ class _$EventCopyWithImpl<$Res, $Val extends Event>
       participants: freezed == participants
           ? _value.participants
           : participants // ignore: cast_nullable_to_non_nullable
-              as List<AppUser>?,
+              as List<String>?,
     ) as $Val);
   }
 }
@@ -159,10 +166,11 @@ abstract class _$$EventImplCopyWith<$Res> implements $EventCopyWith<$Res> {
       DateTime startTime,
       String location,
       String category,
+      String groupId,
       List<String>? eventDetails,
       String? conductor,
       String? soloist,
-      List<AppUser>? participants});
+      List<String>? participants});
 }
 
 /// @nodoc
@@ -186,6 +194,7 @@ class __$$EventImplCopyWithImpl<$Res>
     Object? startTime = null,
     Object? location = null,
     Object? category = null,
+    Object? groupId = null,
     Object? eventDetails = freezed,
     Object? conductor = freezed,
     Object? soloist = freezed,
@@ -224,6 +233,10 @@ class __$$EventImplCopyWithImpl<$Res>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as String,
+      groupId: null == groupId
+          ? _value.groupId
+          : groupId // ignore: cast_nullable_to_non_nullable
+              as String,
       eventDetails: freezed == eventDetails
           ? _value._eventDetails
           : eventDetails // ignore: cast_nullable_to_non_nullable
@@ -239,7 +252,7 @@ class __$$EventImplCopyWithImpl<$Res>
       participants: freezed == participants
           ? _value._participants
           : participants // ignore: cast_nullable_to_non_nullable
-              as List<AppUser>?,
+              as List<String>?,
     ));
   }
 }
@@ -256,10 +269,11 @@ class _$EventImpl extends _Event {
       required this.startTime,
       required this.location,
       required this.category,
+      required this.groupId,
       final List<String>? eventDetails,
       this.conductor,
       this.soloist,
-      final List<AppUser>? participants})
+      final List<String>? participants})
       : _eventDetails = eventDetails,
         _participants = participants,
         super._();
@@ -283,6 +297,8 @@ class _$EventImpl extends _Event {
   final String location;
   @override
   final String category;
+  @override
+  final String groupId;
   final List<String>? _eventDetails;
   @override
   List<String>? get eventDetails {
@@ -297,9 +313,9 @@ class _$EventImpl extends _Event {
   final String? conductor;
   @override
   final String? soloist;
-  final List<AppUser>? _participants;
+  final List<String>? _participants;
   @override
-  List<AppUser>? get participants {
+  List<String>? get participants {
     final value = _participants;
     if (value == null) return null;
     if (_participants is EqualUnmodifiableListView) return _participants;
@@ -309,7 +325,7 @@ class _$EventImpl extends _Event {
 
   @override
   String toString() {
-    return 'Event(id: $id, title: $title, startDate: $startDate, endDate: $endDate, eventDay: $eventDay, startTime: $startTime, location: $location, category: $category, eventDetails: $eventDetails, conductor: $conductor, soloist: $soloist, participants: $participants)';
+    return 'Event(id: $id, title: $title, startDate: $startDate, endDate: $endDate, eventDay: $eventDay, startTime: $startTime, location: $location, category: $category, groupId: $groupId, eventDetails: $eventDetails, conductor: $conductor, soloist: $soloist, participants: $participants)';
   }
 
   @override
@@ -330,6 +346,7 @@ class _$EventImpl extends _Event {
                 other.location == location) &&
             (identical(other.category, category) ||
                 other.category == category) &&
+            (identical(other.groupId, groupId) || other.groupId == groupId) &&
             const DeepCollectionEquality()
                 .equals(other._eventDetails, _eventDetails) &&
             (identical(other.conductor, conductor) ||
@@ -351,6 +368,7 @@ class _$EventImpl extends _Event {
       startTime,
       location,
       category,
+      groupId,
       const DeepCollectionEquality().hash(_eventDetails),
       conductor,
       soloist,
@@ -382,10 +400,11 @@ abstract class _Event extends Event {
       required final DateTime startTime,
       required final String location,
       required final String category,
+      required final String groupId,
       final List<String>? eventDetails,
       final String? conductor,
       final String? soloist,
-      final List<AppUser>? participants}) = _$EventImpl;
+      final List<String>? participants}) = _$EventImpl;
   _Event._() : super._();
 
   factory _Event.fromJson(Map<String, dynamic> json) = _$EventImpl.fromJson;
@@ -407,13 +426,15 @@ abstract class _Event extends Event {
   @override
   String get category;
   @override
+  String get groupId;
+  @override
   List<String>? get eventDetails;
   @override
   String? get conductor;
   @override
   String? get soloist;
   @override
-  List<AppUser>? get participants;
+  List<String>? get participants;
 
   /// Create a copy of Event
   /// with the given fields replaced by the non-null parameter values.

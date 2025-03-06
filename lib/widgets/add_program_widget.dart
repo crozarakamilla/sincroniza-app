@@ -44,8 +44,9 @@ class AddProgramWidget extends StatelessWidget {
                         vertical: 15, horizontal: 20),
                   ),
                   keyboardType: TextInputType.text,
-                  autocorrect: false,
-                  textCapitalization: TextCapitalization.none,
+                  autocorrect: true,
+                  enableSuggestions: true,
+                  textCapitalization: TextCapitalization.sentences,
                   onChanged: (value) {
                     programItem = value;
                   },

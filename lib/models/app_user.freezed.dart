@@ -22,9 +22,8 @@ AppUser _$AppUserFromJson(Map<String, dynamic> json) {
 mixin _$AppUser {
   String get uid => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  String get groupId => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
-  String get photoUrl => throw _privateConstructorUsedError;
+  String? get photoUrl => throw _privateConstructorUsedError;
 
   /// Serializes this AppUser to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -40,8 +39,7 @@ abstract class $AppUserCopyWith<$Res> {
   factory $AppUserCopyWith(AppUser value, $Res Function(AppUser) then) =
       _$AppUserCopyWithImpl<$Res, AppUser>;
   @useResult
-  $Res call(
-      {String uid, String name, String groupId, String email, String photoUrl});
+  $Res call({String uid, String name, String email, String? photoUrl});
 }
 
 /// @nodoc
@@ -61,9 +59,8 @@ class _$AppUserCopyWithImpl<$Res, $Val extends AppUser>
   $Res call({
     Object? uid = null,
     Object? name = null,
-    Object? groupId = null,
     Object? email = null,
-    Object? photoUrl = null,
+    Object? photoUrl = freezed,
   }) {
     return _then(_value.copyWith(
       uid: null == uid
@@ -74,18 +71,14 @@ class _$AppUserCopyWithImpl<$Res, $Val extends AppUser>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      groupId: null == groupId
-          ? _value.groupId
-          : groupId // ignore: cast_nullable_to_non_nullable
-              as String,
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      photoUrl: null == photoUrl
+      photoUrl: freezed == photoUrl
           ? _value.photoUrl
           : photoUrl // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ) as $Val);
   }
 }
@@ -97,8 +90,7 @@ abstract class _$$AppUserImplCopyWith<$Res> implements $AppUserCopyWith<$Res> {
       __$$AppUserImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String uid, String name, String groupId, String email, String photoUrl});
+  $Res call({String uid, String name, String email, String? photoUrl});
 }
 
 /// @nodoc
@@ -116,9 +108,8 @@ class __$$AppUserImplCopyWithImpl<$Res>
   $Res call({
     Object? uid = null,
     Object? name = null,
-    Object? groupId = null,
     Object? email = null,
-    Object? photoUrl = null,
+    Object? photoUrl = freezed,
   }) {
     return _then(_$AppUserImpl(
       uid: null == uid
@@ -129,18 +120,14 @@ class __$$AppUserImplCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      groupId: null == groupId
-          ? _value.groupId
-          : groupId // ignore: cast_nullable_to_non_nullable
-              as String,
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      photoUrl: null == photoUrl
+      photoUrl: freezed == photoUrl
           ? _value.photoUrl
           : photoUrl // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }
@@ -151,9 +138,8 @@ class _$AppUserImpl implements _AppUser {
   const _$AppUserImpl(
       {required this.uid,
       required this.name,
-      required this.groupId,
       required this.email,
-      required this.photoUrl});
+      this.photoUrl});
 
   factory _$AppUserImpl.fromJson(Map<String, dynamic> json) =>
       _$$AppUserImplFromJson(json);
@@ -163,15 +149,13 @@ class _$AppUserImpl implements _AppUser {
   @override
   final String name;
   @override
-  final String groupId;
-  @override
   final String email;
   @override
-  final String photoUrl;
+  final String? photoUrl;
 
   @override
   String toString() {
-    return 'AppUser(uid: $uid, name: $name, groupId: $groupId, email: $email, photoUrl: $photoUrl)';
+    return 'AppUser(uid: $uid, name: $name, email: $email, photoUrl: $photoUrl)';
   }
 
   @override
@@ -181,7 +165,6 @@ class _$AppUserImpl implements _AppUser {
             other is _$AppUserImpl &&
             (identical(other.uid, uid) || other.uid == uid) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.groupId, groupId) || other.groupId == groupId) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.photoUrl, photoUrl) ||
                 other.photoUrl == photoUrl));
@@ -189,8 +172,7 @@ class _$AppUserImpl implements _AppUser {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, uid, name, groupId, email, photoUrl);
+  int get hashCode => Object.hash(runtimeType, uid, name, email, photoUrl);
 
   /// Create a copy of AppUser
   /// with the given fields replaced by the non-null parameter values.
@@ -212,9 +194,8 @@ abstract class _AppUser implements AppUser {
   const factory _AppUser(
       {required final String uid,
       required final String name,
-      required final String groupId,
       required final String email,
-      required final String photoUrl}) = _$AppUserImpl;
+      final String? photoUrl}) = _$AppUserImpl;
 
   factory _AppUser.fromJson(Map<String, dynamic> json) = _$AppUserImpl.fromJson;
 
@@ -223,11 +204,9 @@ abstract class _AppUser implements AppUser {
   @override
   String get name;
   @override
-  String get groupId;
-  @override
   String get email;
   @override
-  String get photoUrl;
+  String? get photoUrl;
 
   /// Create a copy of AppUser
   /// with the given fields replaced by the non-null parameter values.

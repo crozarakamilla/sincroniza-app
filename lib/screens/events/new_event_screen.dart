@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:sincroniza/controllers/events/event_controller.dart';
+import 'package:sincroniza/controllers/groups/user_groups_controller.dart';
 import 'package:sincroniza/models/category.dart';
 import 'package:sincroniza/models/enums.dart';
 import 'package:sincroniza/models/event.dart';
@@ -12,6 +13,8 @@ import 'package:sincroniza/widgets/custom_app_bar.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../controllers/configs/category_provider.dart';
+import '../../models/group.dart';
+import '../../repositories/user/firebase_auth_repository.dart';
 
 class NewEventScreen extends ConsumerStatefulWidget {
   const NewEventScreen({super.key});
@@ -32,6 +35,9 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
   final TextEditingController _timeController = TextEditingController();
   BuildContext? _progressIndicatorContext;
   var uuid = const Uuid();
+
+  List<Group> userGroups = [];
+  String? selectedGroup;
 
   var title;
   var startDate;
@@ -55,6 +61,8 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
     }
 
     _form.currentState!.save();
+
+    FocusScope.of(context).unfocus();
 
     startDate = DateFormat('dd/MM/yyyy').parse(_startDateController.text);
     endDate = DateFormat('dd/MM/yyyy').parse(_endDateController.text);
@@ -80,13 +88,16 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
       conductor: conductor,
       soloist: soloist,
       category: category,
+      groupId: userGroups.length == 1 ? userGroups.first.id : selectedGroup!,
       eventDetails: programList,
     );
     final eventController = ref.read(eventControllerProvider.notifier);
     await eventController.postEvent(newEvent);
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Evento adicionado!')),
+        const SnackBar(
+          content: Text('Evento adicionado!'),
+        ),
       );
       Navigator.of(context).pop();
     }
@@ -156,6 +167,10 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
   @override
   Widget build(BuildContext context) {
     final Map<CategoryEnum, Category> categories = ref.read(categoriesProvider);
+    final groups = ref.watch(userGroupsControllerProvider(
+        ref.read(authRepositoryProvider).currentUser!.uid));
+
+    groups.whenData((data) => userGroups = data);
 
     ref.listen(eventControllerProvider, (prev, state) async {
       if (state.isLoading) {
@@ -189,7 +204,10 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
     });
 
     return Scaffold(
-      appBar: CustomAppBar(title: "Novo evento"),
+      appBar: CustomAppBar(
+        title: 'Novo Evento',
+        showDefaultActions: false,
+      ),
       backgroundColor: Theme.of(context).colorScheme.primaryFixedDim,
       body: Padding(
         padding:
@@ -203,6 +221,100 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    Visibility(
+                      visible: userGroups.length == 1,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 18, top: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Grupo: ",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge!
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                            ),
+                            Text(
+                              userGroups.length == 1
+                                  ? userGroups.first.name
+                                  : '',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge!
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
+                                      fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 18,
+                    ),
+                    Visibility(
+                      visible: userGroups.length > 1,
+                      child: DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          labelText: 'Grupo',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainer),
+                          ),
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainer,
+                                width: 2), // Focus effect
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainer),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 5),
+                        ),
+                        value: selectedGroup,
+                        items: userGroups.map((entry) {
+                          return DropdownMenuItem<String>(
+                            value: entry.id,
+                            child: Text(entry.name),
+                          );
+                        }).toList(),
+                        onChanged: (String? newGroup) {
+                          setState(() {
+                            selectedGroup = newGroup;
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {}
+                          return null;
+                        },
+                        onSaved: (value) {
+                          selectedGroup = value;
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 18,
+                    ),
                     TextFormField(
                       decoration: InputDecoration(
                         labelText: 'Nome',
@@ -235,7 +347,8 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
                       ),
                       keyboardType: TextInputType.text,
                       autocorrect: false,
-                      textCapitalization: TextCapitalization.none,
+                      textCapitalization: TextCapitalization.sentences,
+                      enableSuggestions: true,
                       validator: (value) {
                         if (value == null ||
                             value.trim().isEmpty ||
@@ -541,8 +654,9 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
                             vertical: 15, horizontal: 20),
                       ),
                       keyboardType: TextInputType.text,
-                      autocorrect: false,
-                      textCapitalization: TextCapitalization.none,
+                      autocorrect: true,
+                      enableSuggestions: true,
+                      textCapitalization: TextCapitalization.sentences,
                       validator: (value) {
                         if (value == null ||
                             value.trim().isEmpty ||
@@ -589,8 +703,9 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
                             vertical: 15, horizontal: 20),
                       ),
                       keyboardType: TextInputType.text,
-                      autocorrect: false,
-                      textCapitalization: TextCapitalization.none,
+                      autocorrect: true,
+                      enableSuggestions: true,
+                      textCapitalization: TextCapitalization.sentences,
                       onSaved: (value) {
                         conductor = value;
                       },
@@ -629,8 +744,9 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
                             vertical: 15, horizontal: 20),
                       ),
                       keyboardType: TextInputType.text,
-                      autocorrect: false,
-                      textCapitalization: TextCapitalization.none,
+                      autocorrect: true,
+                      enableSuggestions: true,
+                      textCapitalization: TextCapitalization.words,
                       onSaved: (value) {
                         soloist = value;
                       },
@@ -722,7 +838,7 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
                         backgroundColor: Theme.of(context).colorScheme.primary,
                       ),
                       child: Text(
-                        'Cadastrar',
+                        'Adicionar',
                         style: Theme.of(context)
                             .textTheme
                             .titleMedium!

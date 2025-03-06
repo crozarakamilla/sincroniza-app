@@ -5,6 +5,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sincroniza/routing/refresh_listenable.dart';
 import 'package:sincroniza/screens/events/events_screen.dart';
 import 'package:sincroniza/screens/events/new_event_screen.dart';
+import 'package:sincroniza/screens/groups/groups_screen.dart';
+import 'package:sincroniza/screens/home_screen.dart';
 import 'package:sincroniza/screens/users/auth_screen.dart';
 import 'package:sincroniza/screens/users/sign_up_screen.dart';
 
@@ -20,8 +22,15 @@ GoRouter router(Ref ref) {
   final auth = ref.watch(authRepositoryProvider);
   return GoRouter(
     navigatorKey: _key,
-    initialLocation: AppRoutes.events.path,
+    initialLocation: AppRoutes.home.path,
     routes: [
+      GoRoute(
+        path: AppRoutes.home.path,
+        name: AppRoutes.home.name,
+        pageBuilder: (context, state) => const MaterialPage(
+          child: HomeScreen(),
+        ),
+      ),
       GoRoute(
         path: AppRoutes.events.path,
         name: AppRoutes.events.routeName,
@@ -50,6 +59,13 @@ GoRouter router(Ref ref) {
           child: NewEventScreen(),
         ),
       ),
+      GoRoute(
+        path: AppRoutes.groups.path,
+        name: AppRoutes.groups.name,
+        pageBuilder: (context, state) => const MaterialPage(
+          child: GroupsScreen(),
+        ),
+      ),
     ],
     refreshListenable: GoRouterRefreshStream(auth.authStateChanges()),
     redirect: (context, state) async {
@@ -64,7 +80,7 @@ GoRouter router(Ref ref) {
 
       // should redirect the user after they have logged in
       if (isLoggedIn && isLoggingIn) {
-        return AppRoutes.events.path;
+        return AppRoutes.home.path;
       }
       return null;
     },

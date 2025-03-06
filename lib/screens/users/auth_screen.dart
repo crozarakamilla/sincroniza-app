@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sign_button/sign_button.dart';
 import 'package:sincroniza/routing/app_route_enum.dart';
 
-import '../../controllers/users/auth_controller.dart';
+import '../../controllers/users/firebase_auth_controller.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
