@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sincroniza/controllers/groups/users_in_group_controller.dart';
 import 'package:sincroniza/widgets/custom_app_bar.dart';
+import 'package:sincroniza/widgets/loading_widget.dart';
 import 'package:sincroniza/widgets/users_in_event.dart';
 
 import '../../models/app_user.dart';
@@ -74,11 +75,7 @@ class GroupDetailScreen extends ConsumerWidget {
         ),
       );
     }, loading: () {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return const LoadingWidget();
     });
   }
 }

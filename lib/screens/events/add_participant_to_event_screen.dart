@@ -4,11 +4,15 @@ import 'package:sincroniza/controllers/events/event_controller.dart';
 import 'package:sincroniza/models/app_user.dart';
 
 import '../../controllers/groups/users_in_group_controller.dart';
+import '../../widgets/loading_widget.dart';
 import '../../widgets/users_in_group.dart';
 
 class AddParticipantToEventScreen extends ConsumerStatefulWidget {
-  const AddParticipantToEventScreen(
-      {super.key, required this.eventId, required this.groupId});
+  const AddParticipantToEventScreen({
+    super.key,
+    required this.eventId,
+    required this.groupId,
+  });
 
   final String eventId;
   final String groupId;
@@ -20,16 +24,51 @@ class AddParticipantToEventScreen extends ConsumerStatefulWidget {
 
 class _AddParticipantToEventScreenState
     extends ConsumerState<AddParticipantToEventScreen> {
+  BuildContext? _progressIndicatorContext;
   bool showTextField = false;
   TextEditingController _searchController = TextEditingController();
   String? selectedUser;
   List<String> usersToAdd = [];
 
   void addUserToEvent(String userId) {
+    if (usersToAdd.contains(userId)) {
+      usersToAdd.remove(userId);
+      return;
+    }
     usersToAdd.add(userId);
-    ref
+  }
+
+  void _saveUsers(BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (ctx) {
+          _progressIndicatorContext = ctx;
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+    await ref
         .read(eventControllerProvider.notifier)
         .addUserToEvent(widget.eventId, usersToAdd);
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Usuários adicionados!'),
+        ),
+      );
+
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    }
+  }
+
+  @override
+  void dispose() {
+    if (_progressIndicatorContext != null &&
+        _progressIndicatorContext!.mounted) {
+      _progressIndicatorContext = null;
+    }
+    super.dispose();
   }
 
   @override
@@ -41,6 +80,16 @@ class _AddParticipantToEventScreenState
         return user.name.toLowerCase().contains(query);
       }).toList();
       return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).colorScheme.secondary,
+          onPressed: () {
+            _saveUsers(context);
+          },
+          child: const Icon(
+            Icons.check,
+            weight: 60,
+          ),
+        ),
         appBar: !showTextField
             ? AppBar(
                 title: Text(
@@ -173,11 +222,7 @@ class _AddParticipantToEventScreenState
         ),
       );
     }, loading: () {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return const LoadingWidget();
     });
   }
 }

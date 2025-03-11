@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sincroniza/routing/refresh_listenable.dart';
 import 'package:sincroniza/screens/events/events_screen.dart';
-import 'package:sincroniza/screens/events/new_event_screen.dart';
+import 'package:sincroniza/screens/events/new_event_form_screen.dart';
 import 'package:sincroniza/screens/groups/groups_screen.dart';
 import 'package:sincroniza/screens/home_screen.dart';
 import 'package:sincroniza/screens/users/auth_screen.dart';
@@ -56,7 +56,7 @@ GoRouter router(Ref ref) {
         path: AppRoutes.newEvent.path,
         name: AppRoutes.newEvent.name,
         pageBuilder: (context, state) => const MaterialPage(
-          child: NewEventScreen(),
+          child: NewEventFormScreen(),
         ),
       ),
       GoRoute(

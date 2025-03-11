@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sincroniza/controllers/events/event_controller.dart';
 import 'package:sincroniza/models/event.dart';
+import 'package:sincroniza/screens/events/choose_new_event_input_type.dart';
 import 'package:sincroniza/screens/events/event_detail_screen.dart';
-import 'package:sincroniza/screens/events/new_event_screen.dart';
+import 'package:sincroniza/screens/events/new_event_form_screen.dart';
+import 'package:sincroniza/screens/events/new_event_input_list.dart';
 import 'package:sincroniza/widgets/event_card.dart';
+
+import '../../controllers/groups/user_groups_controller.dart';
+import '../../models/group.dart';
+import '../../repositories/user/firebase_auth_repository.dart';
+import '../../widgets/loading_widget.dart';
 
 class EventsScreen extends ConsumerWidget {
   const EventsScreen({super.key});
@@ -19,8 +26,57 @@ class EventsScreen extends ConsumerWidget {
     );
   }
 
+  void setInputType(BuildContext context, inputType) {
+    Navigator.of(context).pop();
+    if (inputType == 'single') {
+      showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          useSafeArea: true,
+          builder: (BuildContext context) {
+            return const NewEventFormScreen();
+          });
+    } else {
+      showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          useSafeArea: true,
+          builder: (BuildContext context) {
+            return NewEventInputList();
+          });
+    }
+  }
+
+  void customDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        useSafeArea: true,
+        builder: (BuildContext context) {
+          return ChooseNewEventInputType(
+            selectInputType: setInputType,
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    List<Group> userGroups = [];
+    final groups = ref.watch(userGroupsControllerProvider(
+        ref.read(authRepositoryProvider).currentUser!.uid));
+
+    groups.whenData((data) => userGroups = data);
+
+    FloatingActionButton floatingButton = FloatingActionButton(
+      onPressed: () {
+        customDialog(context);
+      },
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      child: const Icon(
+        Icons.add,
+        weight: 50,
+      ),
+    );
+
     final events = ref.watch(eventControllerProvider);
     return events.when(data: (List<Event> events) {
       if (events.isEmpty) {
@@ -50,18 +106,8 @@ class EventsScreen extends ConsumerWidget {
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  useSafeArea: true,
-                  builder: (BuildContext context) {
-                    return const NewEventScreen();
-                  });
-            },
-            child: const Icon(Icons.add),
-          ),
+          floatingActionButton:
+              Visibility(visible: userGroups.isNotEmpty, child: floatingButton),
         );
       }
 
@@ -75,18 +121,8 @@ class EventsScreen extends ConsumerWidget {
             },
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                useSafeArea: true,
-                builder: (BuildContext context) {
-                  return const NewEventScreen();
-                });
-          },
-          child: const Icon(Icons.add),
-        ),
+        floatingActionButton:
+            Visibility(visible: userGroups.isNotEmpty, child: floatingButton),
       );
     }, error: (Object error, StackTrace stackTrace) {
       return Scaffold(
@@ -117,11 +153,7 @@ class EventsScreen extends ConsumerWidget {
         ),
       );
     }, loading: () {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return const LoadingWidget();
     });
   }
 }

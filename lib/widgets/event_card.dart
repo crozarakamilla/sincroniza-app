@@ -38,7 +38,7 @@ class EventCard extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                event.title,
+                event.title!,
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       color: Theme.of(context).colorScheme.surfaceTint,
                       fontWeight: FontWeight.w900,
@@ -54,7 +54,7 @@ class EventCard extends ConsumerWidget {
                         ? Icons.check
                         : Icons.outbond_outlined,
                     size: 15,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context).colorScheme.secondary,
                     weight: 10.0,
                   ),
                   const SizedBox(
@@ -80,12 +80,12 @@ class EventCard extends ConsumerWidget {
                   Icon(
                     Icons.date_range,
                     size: 15,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                   const SizedBox(
                     width: 5,
                   ),
-                  Text(event.formattedEventDay)
+                  Text(event.eventDay!)
                 ],
               ),
               const SizedBox(
@@ -96,12 +96,12 @@ class EventCard extends ConsumerWidget {
                   Icon(
                     Icons.pin_drop,
                     size: 15,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                   const SizedBox(
                     width: 5,
                   ),
-                  Text(event.location)
+                  Text(event.location!)
                 ],
               ),
             ],

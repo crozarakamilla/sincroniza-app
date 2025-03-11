@@ -6,18 +6,17 @@ part 'event.g.dart';
 
 final formatter = DateFormat('dd/MM/yyyy', 'pt_BR');
 
-@freezed
+@unfreezed
 class Event with _$Event {
   factory Event({
-    required String id,
-    required String title,
-    required DateTime startDate,
-    required DateTime endDate,
-    required DateTime eventDay,
-    required DateTime startTime,
-    required String location,
-    required String category,
-    required String groupId,
+    String? id,
+    String? title,
+    String? eventDay,
+    String? startTime,
+    String? location,
+    String? category,
+    String? groupId,
+    String? rehearsalsQuantity,
     List<String>? eventDetails,
     String? conductor,
     String? soloist,
@@ -25,18 +24,6 @@ class Event with _$Event {
   }) = _Event;
 
   const Event._();
-
-  String get formattedStartDate {
-    return formatter.format(startDate);
-  }
-
-  String get formattedEndDate {
-    return formatter.format(endDate);
-  }
-
-  String get formattedEventDay {
-    return formatter.format(eventDay);
-  }
 
   List<String>? participantsInEvent(List<String> groupUsersList) {
     return participants

@@ -16,8 +16,8 @@ import '../../controllers/configs/category_provider.dart';
 import '../../models/group.dart';
 import '../../repositories/user/firebase_auth_repository.dart';
 
-class NewEventScreen extends ConsumerStatefulWidget {
-  const NewEventScreen({super.key});
+class NewEventFormScreen extends ConsumerStatefulWidget {
+  const NewEventFormScreen({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
@@ -27,7 +27,7 @@ class NewEventScreen extends ConsumerStatefulWidget {
 
 enum DateType { startDate, endDate, eventDay }
 
-class _NewEventScreenState extends ConsumerState<NewEventScreen> {
+class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
   final _form = GlobalKey<FormState>();
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
@@ -40,10 +40,11 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
   String? selectedGroup;
 
   var title;
+  var eventDay;
   var startDate;
   var endDate;
-  var eventDay;
   var startTime;
+  var rehearsals;
   var location;
   var category;
   var eventDetails;
@@ -66,7 +67,7 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
 
     startDate = DateFormat('dd/MM/yyyy').parse(_startDateController.text);
     endDate = DateFormat('dd/MM/yyyy').parse(_endDateController.text);
-    eventDay = DateFormat('dd/MM/yyyy').parse(_eventDayController.text);
+    _eventDayController.text;
     startTime = DateFormat('HH:mm').parse(startTime);
 
     DateTime startDateTime = DateTime(
@@ -80,10 +81,9 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
     Event newEvent = Event(
       id: uuid.v4(),
       title: title,
-      startDate: startDate,
-      endDate: endDate,
       eventDay: eventDay,
-      startTime: startDateTime,
+      startTime: startTime,
+      rehearsalsQuantity: rehearsals,
       location: location,
       conductor: conductor,
       soloist: soloist,
@@ -210,8 +210,7 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
       ),
       backgroundColor: Theme.of(context).colorScheme.primaryFixedDim,
       body: Padding(
-        padding:
-            const EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
+        padding: const EdgeInsets.all(10),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -224,7 +223,7 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
                     Visibility(
                       visible: userGroups.length == 1,
                       child: Padding(
-                        padding: const EdgeInsets.only(bottom: 18, top: 10),
+                        padding: const EdgeInsets.only(bottom: 10, top: 15),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -256,9 +255,6 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
                           ],
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 18,
                     ),
                     Visibility(
                       visible: userGroups.length > 1,
@@ -417,14 +413,8 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
                       height: 18,
                     ),
                     TextFormField(
-                      controller: _startDateController,
-                      onTap: () async {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        await _selectDate(
-                            context, _startDateController, DateType.startDate);
-                      },
                       decoration: InputDecoration(
-                        labelText: 'Data inicial',
+                        labelText: 'Quantidade de ensaios',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           // Rounded corners
@@ -454,71 +444,18 @@ class _NewEventScreenState extends ConsumerState<NewEventScreen> {
                       ),
                       keyboardType: TextInputType.text,
                       autocorrect: false,
-                      textCapitalization: TextCapitalization.none,
+                      textCapitalization: TextCapitalization.sentences,
+                      enableSuggestions: true,
                       validator: (value) {
                         if (value == null ||
                             value.trim().isEmpty ||
-                            value.length < 3) {
-                          return 'Por favor, insira uma data válida.';
+                            value.length < 4) {
+                          return 'Por favor, insira um nome válido.';
                         }
                         return null;
                       },
                       onSaved: (value) {
-                        startDate = value;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 18,
-                    ),
-                    TextFormField(
-                      controller: _endDateController,
-                      onTap: () async {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        await _selectDate(
-                            context, _endDateController, DateType.endDate);
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Data final',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          // Rounded corners
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
-                        ),
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
-                              width: 2), // Focus effect
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 20),
-                      ),
-                      keyboardType: TextInputType.text,
-                      autocorrect: false,
-                      textCapitalization: TextCapitalization.none,
-                      validator: (value) {
-                        if (value == null ||
-                            value.trim().isEmpty ||
-                            value.length < 3) {
-                          return 'Por favor, insira uma data válida.';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        endDate = value;
+                        rehearsals = value;
                       },
                     ),
                     const SizedBox(

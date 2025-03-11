@@ -21,7 +21,7 @@ class EventController extends _$EventController {
   Future<void> postEvent(Event event) async {
     await ref
         .read(eventRepositoryProvider)
-        .postEvent(event, event.id, event.toJson());
+        .postEvent(event, event.id!, event.toJson());
     ref.invalidateSelf();
     await future;
   }

@@ -4,9 +4,13 @@ import 'package:sincroniza/controllers/events/users_in_event_controller.dart';
 import 'package:sincroniza/models/event.dart';
 import 'package:sincroniza/widgets/custom_app_bar.dart';
 import 'package:sincroniza/widgets/event_details_list.dart';
+import 'package:sincroniza/widgets/loading_widget.dart';
 import 'package:sincroniza/widgets/users_in_event.dart';
 
+import '../../controllers/configs/category_provider.dart';
 import '../../models/app_user.dart';
+import '../../models/category.dart';
+import '../../models/enums.dart';
 import 'add_participant_to_event_screen.dart';
 
 class EventDetailScreen extends ConsumerStatefulWidget {
@@ -22,7 +26,9 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final usersInEvent =
-        ref.watch(usersInEventControllerProvider(widget.event.id));
+        ref.watch(usersInEventControllerProvider(widget.event.id!));
+    final Map<CategoryEnum, Category> categoriesValues =
+        ref.read(categoriesProvider);
 
     List<Widget> eventDetailActions = [
       Padding(
@@ -38,7 +44,9 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                 useSafeArea: true,
                 builder: (BuildContext context) {
                   return AddParticipantToEventScreen(
-                      eventId: widget.event.id, groupId: widget.event.groupId);
+                    eventId: widget.event.id!,
+                    groupId: widget.event.groupId!,
+                  );
                 });
           },
           child: Icon(
@@ -52,7 +60,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
     return usersInEvent.when(data: (List<AppUser> usersList) {
       return Scaffold(
         appBar: CustomAppBar(
-          title: widget.event.title,
+          title: widget.event.title!,
           showDefaultActions: false,
           customActions: eventDetailActions,
         ),
@@ -62,8 +70,118 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (widget.event.eventDetails != null)
-                EventDetailsList(details: widget.event.eventDetails!),
+              Row(
+                children: [
+                  Icon(
+                    widget.event.category == 'oficial'
+                        ? Icons.check
+                        : Icons.outbond_outlined,
+                    size: 15,
+                    color: Theme.of(context).colorScheme.secondary,
+                    weight: 10.0,
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    categoriesValues[widget.event.category == 'oficial'
+                            ? CategoryEnum.oficial
+                            : CategoryEnum.extraordinario]!
+                        .name,
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          color: Theme.of(context).colorScheme.surfaceTint,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 16,
+                        ),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.date_range,
+                    size: 15,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    widget.event.eventDay!,
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          color: Theme.of(context).colorScheme.surfaceTint,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 16,
+                        ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.pin_drop,
+                    size: 15,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    widget.event.location!,
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          color: Theme.of(context).colorScheme.surfaceTint,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 16,
+                        ),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.queue_music_rounded,
+                    size: 15,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    "Quantidade de ensaios: ${widget.event.rehearsalsQuantity!}",
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          color: Theme.of(context).colorScheme.surfaceTint,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 16,
+                        ),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Divider(
+                      color: Theme.of(context).colorScheme.secondary,
+                      thickness: 1,
+                    ),
+                  ),
+                ],
+              ),
+              Visibility(
+                visible: widget.event.eventDetails != [],
+                child: EventDetailsList(details: widget.event.eventDetails!),
+              ),
               const SizedBox(
                 height: 10,
               ),
@@ -120,11 +238,7 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
         ),
       );
     }, loading: () {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return const LoadingWidget();
     });
   }
 }

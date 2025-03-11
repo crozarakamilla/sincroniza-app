@@ -1,26 +1,28 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'event_controller.dart';
+part of 'ai_utils_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eventControllerHash() => r'4320c428619c6aaf91c8c33f0ae0f3f8e30a9a80';
+String _$aiUtilsRepositoryHash() => r'65455c9c428a8fe2338110bb5de1aed1b90f12ad';
 
-/// See also [EventController].
-@ProviderFor(EventController)
-final eventControllerProvider =
-    AutoDisposeAsyncNotifierProvider<EventController, List<Event>>.internal(
-  EventController.new,
-  name: r'eventControllerProvider',
+/// See also [aiUtilsRepository].
+@ProviderFor(aiUtilsRepository)
+final aiUtilsRepositoryProvider =
+    AutoDisposeProvider<AiUtilsRepository>.internal(
+  aiUtilsRepository,
+  name: r'aiUtilsRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$eventControllerHash,
+      : _$aiUtilsRepositoryHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$EventController = AutoDisposeAsyncNotifier<List<Event>>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef AiUtilsRepositoryRef = AutoDisposeProviderRef<AiUtilsRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

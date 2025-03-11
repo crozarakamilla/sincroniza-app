@@ -30,12 +30,17 @@ class EventRepository {
 
   Future<void> addUsersToEvent(String eventId, List<String> usersIds) async {
     final eventQuery = await database.collection('events').doc(eventId).get();
-    print(eventQuery.data()?['participants']);
     final existingParticipants = eventQuery.data()?['participants'];
+    List<String> usersToAdd = [];
+    for (String userId in usersIds) {
+      if (!usersIds.contains(userId)) {
+        usersToAdd.add(userId);
+      }
+    }
     final eventQuerySnapshot = await database
         .collection('events')
         .doc(eventId)
-        .update({"participants": usersIds});
+        .update({"participants": usersToAdd});
   }
 
   Future<List<Event>> fetchEvents() async {

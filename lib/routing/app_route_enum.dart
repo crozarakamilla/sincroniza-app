@@ -5,6 +5,7 @@ enum AppRoutes {
   events,
   eventDetail,
   newEvent,
+  reviewEvents,
   groups,
 }
 
@@ -23,6 +24,8 @@ extension AppRoutesExtension on AppRoutes {
         return '/event';
       case AppRoutes.newEvent:
         return '/new-event';
+      case AppRoutes.reviewEvents:
+        return '/review-events';
       case AppRoutes.groups:
         return '/groups';
     }
@@ -42,6 +45,8 @@ extension AppRoutesExtension on AppRoutes {
         return 'event-detail';
       case AppRoutes.newEvent:
         return 'new-event';
+      case AppRoutes.reviewEvents:
+        return 'review-events';
       case AppRoutes.groups:
         return 'groups';
     }
