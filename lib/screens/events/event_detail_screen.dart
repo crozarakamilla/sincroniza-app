@@ -25,10 +25,9 @@ class EventDetailScreen extends ConsumerStatefulWidget {
 class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
   @override
   Widget build(BuildContext context) {
-    final usersInEvent =
+    var usersInEvent =
         ref.watch(usersInEventControllerProvider(widget.event.id!));
-    final Map<CategoryEnum, Category> categoriesValues =
-        ref.read(categoriesProvider);
+    final Map<String, Category> categoriesValues = ref.read(categoriesProvider);
 
     List<Widget> eventDetailActions = [
       Padding(
@@ -48,6 +47,8 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
                     groupId: widget.event.groupId!,
                   );
                 });
+            usersInEvent =
+                ref.watch(usersInEventControllerProvider(widget.event.id!));
           },
           child: Icon(
             Icons.group_add_rounded,
@@ -70,103 +71,135 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Icon(
-                    widget.event.category == 'oficial'
-                        ? Icons.check
-                        : Icons.outbond_outlined,
-                    size: 15,
-                    color: Theme.of(context).colorScheme.secondary,
-                    weight: 10.0,
+              Card(
+                elevation: 2,
+                color: Theme.of(context).colorScheme.surfaceContainer,
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            widget.event.category == 'oficial'
+                                ? Icons.check
+                                : Icons.outbond_outlined,
+                            size: 15,
+                            color: Theme.of(context).colorScheme.secondary,
+                            weight: 10.0,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            categoriesValues[widget.event.category == 'oficial'
+                                    ? CategoryEnum.oficial.name
+                                    : CategoryEnum.extraordinario.name]!
+                                .name,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.surfaceTint,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 16,
+                                ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.date_range,
+                            size: 15,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            widget.event.eventDay!,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.surfaceTint,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 16,
+                                ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.pin_drop,
+                            size: 15,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            widget.event.location!,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.surfaceTint,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 16,
+                                ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.queue_music_rounded,
+                            size: 15,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Quantidade de ensaios: " +
+                                        widget.event.rehearsalsQuantity
+                                            .toString() !=
+                                    'null'
+                                ? "Quantidade de ensaios: " +
+                                    widget.event.rehearsalsQuantity.toString()!
+                                : "Quantidade de ensaios: 0",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 16,
+                                ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
                   ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    categoriesValues[widget.event.category == 'oficial'
-                            ? CategoryEnum.oficial
-                            : CategoryEnum.extraordinario]!
-                        .name,
-                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: Theme.of(context).colorScheme.surfaceTint,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 16,
-                        ),
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              Row(
-                children: [
-                  Icon(
-                    Icons.date_range,
-                    size: 15,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    widget.event.eventDay!,
-                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: Theme.of(context).colorScheme.surfaceTint,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 16,
-                        ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              Row(
-                children: [
-                  Icon(
-                    Icons.pin_drop,
-                    size: 15,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    widget.event.location!,
-                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: Theme.of(context).colorScheme.surfaceTint,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 16,
-                        ),
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              Row(
-                children: [
-                  Icon(
-                    Icons.queue_music_rounded,
-                    size: 15,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    "Quantidade de ensaios: ${widget.event.rehearsalsQuantity!}",
-                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: Theme.of(context).colorScheme.surfaceTint,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 16,
-                        ),
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 10,
+                ),
               ),
               Row(
                 children: [
@@ -184,6 +217,19 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
               ),
               const SizedBox(
                 height: 10,
+              ),
+              Visibility(
+                visible: usersList.isNotEmpty,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Divider(
+                        color: Theme.of(context).colorScheme.secondary,
+                        thickness: 1,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Visibility(
                 visible: usersList.isNotEmpty,

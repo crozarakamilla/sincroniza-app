@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sincroniza/repositories/database/firebase_firestore_repository.dart';
 
+import '../../models/event.dart';
 import '../../models/group.dart';
 import '../user/firebase_auth_repository.dart';
 
@@ -20,6 +21,22 @@ class GroupRepository {
 
   final FirebaseFirestore database;
   String userId = '';
+  String currentGroupId = '';
+
+  String get getCurrentGroupId => currentGroupId;
+
+  Future<Group> get currentGroup => getCurrentGroup();
+
+  Future<void> setCurrentGroupId(String groupId) async {
+    currentGroupId = groupId;
+  }
+
+  Future<Group> getCurrentGroup() async {
+    final querySnapshot =
+        await database.collection('groups').doc(currentGroupId).get();
+    final group = querySnapshot.data();
+    return Group.fromJson(group!);
+  }
 
   Future<void> postGroup(
       Group group, String docName, Map<String, dynamic> data) async {
@@ -35,5 +52,17 @@ class GroupRepository {
 
     final groupsList = groups.map((group) => Group.fromJson(group)).toList();
     return groupsList;
+  }
+
+  Future<List<Event>> fetchGroupEvents(String groupId) async {
+    final querySnapshot = await database
+        .collection('events')
+        .where('groupId', isEqualTo: groupId)
+        .get();
+    final events = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+    final eventsList = events.map((group) => Event.fromJson(group)).toList();
+
+    return eventsList;
   }
 }

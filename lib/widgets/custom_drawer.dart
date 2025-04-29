@@ -105,7 +105,7 @@ class CustomDrawer extends ConsumerWidget {
               color: Theme.of(context).colorScheme.primary,
             ),
             title: Text(
-              'Grupos',
+              'Naipes',
               style: Theme.of(context).textTheme.displaySmall!.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                     fontSize: 22,

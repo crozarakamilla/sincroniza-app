@@ -1,13 +1,16 @@
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sincroniza/models/category.dart';
 
 import '../../models/enums.dart';
 
-@riverpod
-final categoriesProvider = Provider<Map<CategoryEnum, Category>>((ref) {
+final categoriesProvider = Provider<Map<String, Category>>((ref) {
   return {
-    CategoryEnum.oficial: const Category(name: "Oficial", color: "green"),
-    CategoryEnum.extraordinario:
-        const Category(name: "Extraordinário", color: "red")
+    CategoryEnum.oficial.name:
+        const Category(name: "Oficial", color: Colors.blueAccent),
+    CategoryEnum.extraordinario.name:
+        const Category(name: "Extraordinário", color: Colors.red),
+    CategoryEnum.didatico.name:
+        const Category(name: "Didático", color: Colors.green),
   };
 });

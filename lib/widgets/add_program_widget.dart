@@ -20,25 +20,24 @@ class AddProgramWidget extends StatelessWidget {
                 child: TextField(
                   controller: textController,
                   decoration: InputDecoration(
+                    fillColor: Theme.of(context).colorScheme.onSecondary,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       // Rounded corners
                       borderSide: BorderSide(
-                          color:
-                              Theme.of(context).colorScheme.surfaceContainer),
+                          color: Theme.of(context).colorScheme.onSecondary),
                     ),
                     floatingLabelBehavior: FloatingLabelBehavior.never,
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.surfaceContainer,
+                          color: Theme.of(context).colorScheme.onSecondary,
                           width: 2), // Focus effect
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide(
-                          color:
-                              Theme.of(context).colorScheme.surfaceContainer),
+                          color: Theme.of(context).colorScheme.onSecondary),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 15, horizontal: 20),

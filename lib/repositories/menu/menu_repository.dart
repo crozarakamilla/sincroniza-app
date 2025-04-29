@@ -66,8 +66,8 @@ class MenuRepository {
       case "groups":
         return const [
           PopupMenuItem<String>(
-            value: 'Novo Grupo',
-            child: Text('✏️ Novo Grupo'),
+            value: 'Novo Naipe',
+            child: Text('✏️ Novo Naipe'),
           ),
           PopupMenuItem<String>(
             value: 'Configurações',

@@ -2,18 +2,24 @@ import 'package:flutter/material.dart';
 
 import '../models/app_user.dart';
 
-class UsersInGroup extends StatefulWidget {
-  UsersInGroup({super.key, required this.users, required this.onUsertap});
+class AddUsersToEvent extends StatefulWidget {
+  AddUsersToEvent(
+      {super.key,
+      required this.users,
+      required this.onUsertap,
+      required this.usersInEvent});
 
   final List<AppUser> users;
   final Function onUsertap;
-  List<String> selectedUsers = [];
+  final List<String> usersInEvent;
 
   @override
-  State<UsersInGroup> createState() => _UsersInGroupState();
+  State<AddUsersToEvent> createState() => _AddUsersToEventState();
 }
 
-class _UsersInGroupState extends State<UsersInGroup> {
+class _AddUsersToEventState extends State<AddUsersToEvent> {
+  List<String> selectedUsers = [];
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -22,10 +28,10 @@ class _UsersInGroupState extends State<UsersInGroup> {
         itemBuilder: (ctx, index) => InkWell(
           onTap: () {
             setState(() {
-              if (widget.selectedUsers.contains(widget.users[index].uid)) {
-                widget.selectedUsers.remove(widget.users[index].uid);
+              if (selectedUsers.contains(widget.users[index].uid)) {
+                selectedUsers.remove(widget.users[index].uid);
               } else {
-                widget.selectedUsers.add(widget.users[index].uid);
+                selectedUsers.add(widget.users[index].uid);
               }
             });
             widget.onUsertap(widget.users[index].uid);
@@ -47,7 +53,7 @@ class _UsersInGroupState extends State<UsersInGroup> {
                     ),
               ),
               trailing: Visibility(
-                visible: widget.selectedUsers.contains(widget.users[index].uid),
+                visible: widget.usersInEvent.contains(widget.users[index].uid),
                 child: Icon(
                   Icons.check_circle,
                   color: Theme.of(context).colorScheme.secondary,

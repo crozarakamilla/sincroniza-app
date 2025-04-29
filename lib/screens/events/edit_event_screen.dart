@@ -5,7 +5,6 @@ import 'package:sincroniza/widgets/custom_app_bar.dart';
 
 import '../../controllers/configs/category_provider.dart';
 import '../../models/category.dart';
-import '../../models/enums.dart';
 import '../../models/event.dart';
 import '../../widgets/add_program_widget.dart';
 
@@ -19,7 +18,6 @@ class EditEventScreen extends ConsumerStatefulWidget {
 }
 
 class _EditEventScreenState extends ConsumerState<EditEventScreen> {
-  final _form = GlobalKey<FormState>();
   final TextEditingController _eventDayController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
 
@@ -78,10 +76,10 @@ class _EditEventScreenState extends ConsumerState<EditEventScreen> {
     _eventDayController.text = widget.event.eventDay!;
     _timeController.text = widget.event.startTime!;
 
-    final Map<CategoryEnum, Category> categories = ref.read(categoriesProvider);
+    final Map<String, Category> categories = ref.read(categoriesProvider);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primaryFixedDim,
+      backgroundColor: Theme.of(context).colorScheme.secondaryFixed,
       appBar: CustomAppBar(
           title: 'Editar - ${widget.event.title}', showDefaultActions: false),
       body: SingleChildScrollView(
@@ -94,23 +92,24 @@ class _EditEventScreenState extends ConsumerState<EditEventScreen> {
               initialValue: widget.event.title,
               decoration: InputDecoration(
                 labelText: 'Nome',
+                fillColor: Theme.of(context).colorScheme.onSecondary,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   // Rounded corners
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer),
+                      color: Theme.of(context).colorScheme.onSecondary),
                 ),
                 floatingLabelBehavior: FloatingLabelBehavior.never,
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer,
+                      color: Theme.of(context).colorScheme.onSecondary,
                       width: 2), // Focus effect
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer),
+                      color: Theme.of(context).colorScheme.onSecondary),
                 ),
                 contentPadding:
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
@@ -135,30 +134,32 @@ class _EditEventScreenState extends ConsumerState<EditEventScreen> {
             DropdownButtonFormField<String>(
               decoration: InputDecoration(
                 labelText: 'Categoria',
+                fillColor: Theme.of(context).colorScheme.onSecondary,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
+                  // Rounded corners
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer),
+                      color: Theme.of(context).colorScheme.onSecondary),
                 ),
                 floatingLabelBehavior: FloatingLabelBehavior.never,
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer,
+                      color: Theme.of(context).colorScheme.onSecondary,
                       width: 2), // Focus effect
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer),
+                      color: Theme.of(context).colorScheme.onSecondary),
                 ),
                 contentPadding:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
               ),
               value: widget.event.category,
               items: categories.entries.map((entry) {
                 return DropdownMenuItem<String>(
-                  value: entry.key.name,
+                  value: entry.key,
                   child: Text(entry.value.name),
                 );
               }).toList(),
@@ -184,23 +185,24 @@ class _EditEventScreenState extends ConsumerState<EditEventScreen> {
               },
               decoration: InputDecoration(
                 labelText: 'Dia do evento',
+                fillColor: Theme.of(context).colorScheme.onSecondary,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   // Rounded corners
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer),
+                      color: Theme.of(context).colorScheme.onSecondary),
                 ),
                 floatingLabelBehavior: FloatingLabelBehavior.never,
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer,
+                      color: Theme.of(context).colorScheme.onSecondary,
                       width: 2), // Focus effect
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer),
+                      color: Theme.of(context).colorScheme.onSecondary),
                 ),
                 contentPadding:
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
@@ -220,23 +222,24 @@ class _EditEventScreenState extends ConsumerState<EditEventScreen> {
               },
               decoration: InputDecoration(
                 labelText: 'Horário do evento',
+                fillColor: Theme.of(context).colorScheme.onSecondary,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   // Rounded corners
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer),
+                      color: Theme.of(context).colorScheme.onSecondary),
                 ),
                 floatingLabelBehavior: FloatingLabelBehavior.never,
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer,
+                      color: Theme.of(context).colorScheme.onSecondary,
                       width: 2), // Focus effect
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer),
+                      color: Theme.of(context).colorScheme.onSecondary),
                 ),
                 contentPadding:
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
@@ -258,23 +261,24 @@ class _EditEventScreenState extends ConsumerState<EditEventScreen> {
               initialValue: widget.event.rehearsalsQuantity,
               decoration: InputDecoration(
                 labelText: 'Quantidade de ensaios',
+                fillColor: Theme.of(context).colorScheme.onSecondary,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   // Rounded corners
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer),
+                      color: Theme.of(context).colorScheme.onSecondary),
                 ),
                 floatingLabelBehavior: FloatingLabelBehavior.never,
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer,
+                      color: Theme.of(context).colorScheme.onSecondary,
                       width: 2), // Focus effect
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer),
+                      color: Theme.of(context).colorScheme.onSecondary),
                 ),
                 contentPadding:
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
@@ -300,23 +304,24 @@ class _EditEventScreenState extends ConsumerState<EditEventScreen> {
               initialValue: widget.event.location,
               decoration: InputDecoration(
                 labelText: 'Local do evento',
+                fillColor: Theme.of(context).colorScheme.onSecondary,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   // Rounded corners
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer),
+                      color: Theme.of(context).colorScheme.onSecondary),
                 ),
                 floatingLabelBehavior: FloatingLabelBehavior.never,
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer,
+                      color: Theme.of(context).colorScheme.onSecondary,
                       width: 2), // Focus effect
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer),
+                      color: Theme.of(context).colorScheme.onSecondary),
                 ),
                 contentPadding:
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
@@ -342,23 +347,24 @@ class _EditEventScreenState extends ConsumerState<EditEventScreen> {
               initialValue: widget.event.conductor,
               decoration: InputDecoration(
                 labelText: 'Regente',
+                fillColor: Theme.of(context).colorScheme.onSecondary,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   // Rounded corners
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer),
+                      color: Theme.of(context).colorScheme.onSecondary),
                 ),
                 floatingLabelBehavior: FloatingLabelBehavior.never,
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer,
+                      color: Theme.of(context).colorScheme.onSecondary,
                       width: 2), // Focus effect
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer),
+                      color: Theme.of(context).colorScheme.onSecondary),
                 ),
                 contentPadding:
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
@@ -378,23 +384,24 @@ class _EditEventScreenState extends ConsumerState<EditEventScreen> {
               initialValue: widget.event.soloist,
               decoration: InputDecoration(
                 labelText: 'Solista(s)',
+                fillColor: Theme.of(context).colorScheme.onSecondary,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   // Rounded corners
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer),
+                      color: Theme.of(context).colorScheme.onSecondary),
                 ),
                 floatingLabelBehavior: FloatingLabelBehavior.never,
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer,
+                      color: Theme.of(context).colorScheme.onSecondary,
                       width: 2), // Focus effect
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.surfaceContainer),
+                      color: Theme.of(context).colorScheme.onSecondary),
                 ),
                 contentPadding:
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
@@ -485,12 +492,12 @@ class _EditEventScreenState extends ConsumerState<EditEventScreen> {
                 Navigator.pop(context, widget.event);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
+                backgroundColor: Theme.of(context).colorScheme.secondary,
               ),
               child: Text(
                 'Salvar',
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.surfaceBright,
+                      color: Theme.of(context).colorScheme.onSecondary,
                       fontWeight: FontWeight.bold,
                     ),
               ),

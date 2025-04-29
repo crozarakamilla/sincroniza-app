@@ -26,6 +26,10 @@ mixin _$Event {
   set title(String? value) => throw _privateConstructorUsedError;
   String? get eventDay => throw _privateConstructorUsedError;
   set eventDay(String? value) => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
+  DateTime? get eventDate => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
+  set eventDate(DateTime? value) => throw _privateConstructorUsedError;
   String? get startTime => throw _privateConstructorUsedError;
   set startTime(String? value) => throw _privateConstructorUsedError;
   String? get location => throw _privateConstructorUsedError;
@@ -63,6 +67,8 @@ abstract class $EventCopyWith<$Res> {
       {String? id,
       String? title,
       String? eventDay,
+      @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
+      DateTime? eventDate,
       String? startTime,
       String? location,
       String? category,
@@ -92,6 +98,7 @@ class _$EventCopyWithImpl<$Res, $Val extends Event>
     Object? id = freezed,
     Object? title = freezed,
     Object? eventDay = freezed,
+    Object? eventDate = freezed,
     Object? startTime = freezed,
     Object? location = freezed,
     Object? category = freezed,
@@ -115,6 +122,10 @@ class _$EventCopyWithImpl<$Res, $Val extends Event>
           ? _value.eventDay
           : eventDay // ignore: cast_nullable_to_non_nullable
               as String?,
+      eventDate: freezed == eventDate
+          ? _value.eventDate
+          : eventDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       startTime: freezed == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
@@ -166,6 +177,8 @@ abstract class _$$EventImplCopyWith<$Res> implements $EventCopyWith<$Res> {
       {String? id,
       String? title,
       String? eventDay,
+      @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
+      DateTime? eventDate,
       String? startTime,
       String? location,
       String? category,
@@ -193,6 +206,7 @@ class __$$EventImplCopyWithImpl<$Res>
     Object? id = freezed,
     Object? title = freezed,
     Object? eventDay = freezed,
+    Object? eventDate = freezed,
     Object? startTime = freezed,
     Object? location = freezed,
     Object? category = freezed,
@@ -216,6 +230,10 @@ class __$$EventImplCopyWithImpl<$Res>
           ? _value.eventDay
           : eventDay // ignore: cast_nullable_to_non_nullable
               as String?,
+      eventDate: freezed == eventDate
+          ? _value.eventDate
+          : eventDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       startTime: freezed == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
@@ -263,6 +281,7 @@ class _$EventImpl extends _Event {
       {this.id,
       this.title,
       this.eventDay,
+      @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp) this.eventDate,
       this.startTime,
       this.location,
       this.category,
@@ -284,6 +303,9 @@ class _$EventImpl extends _Event {
   @override
   String? eventDay;
   @override
+  @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
+  DateTime? eventDate;
+  @override
   String? startTime;
   @override
   String? location;
@@ -304,7 +326,7 @@ class _$EventImpl extends _Event {
 
   @override
   String toString() {
-    return 'Event(id: $id, title: $title, eventDay: $eventDay, startTime: $startTime, location: $location, category: $category, groupId: $groupId, rehearsalsQuantity: $rehearsalsQuantity, eventDetails: $eventDetails, conductor: $conductor, soloist: $soloist, participants: $participants)';
+    return 'Event(id: $id, title: $title, eventDay: $eventDay, eventDate: $eventDate, startTime: $startTime, location: $location, category: $category, groupId: $groupId, rehearsalsQuantity: $rehearsalsQuantity, eventDetails: $eventDetails, conductor: $conductor, soloist: $soloist, participants: $participants)';
   }
 
   /// Create a copy of Event
@@ -328,6 +350,8 @@ abstract class _Event extends Event {
       {String? id,
       String? title,
       String? eventDay,
+      @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
+      DateTime? eventDate,
       String? startTime,
       String? location,
       String? category,
@@ -350,6 +374,11 @@ abstract class _Event extends Event {
   @override
   String? get eventDay;
   set eventDay(String? value);
+  @override
+  @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
+  DateTime? get eventDate;
+  @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
+  set eventDate(DateTime? value);
   @override
   String? get startTime;
   set startTime(String? value);

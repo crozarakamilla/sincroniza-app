@@ -18,6 +18,7 @@ class GroupDetailScreen extends ConsumerWidget {
     final users = ref.watch(usersInGroupControllerProvider(group.id));
     return users.when(data: (List<AppUser> users) {
       return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.secondaryFixed,
         appBar: CustomAppBar(
           title: group.name,
           showDefaultActions: true,
@@ -28,16 +29,26 @@ class GroupDetailScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     'Participantes',
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
+                          fontSize: 20,
                         ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Divider(
+                          color: Theme.of(context).colorScheme.onSecondary,
+                          thickness: 1,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -48,6 +59,7 @@ class GroupDetailScreen extends ConsumerWidget {
       );
     }, error: (Object error, StackTrace stackTrace) {
       return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.secondaryFixed,
         body: Padding(
           padding: const EdgeInsets.all(18),
           child: Center(

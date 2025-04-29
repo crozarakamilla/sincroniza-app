@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:sincroniza/screens/events/edit_event_screen.dart';
 import 'package:sincroniza/widgets/custom_app_bar.dart';
 import 'package:uuid/uuid.dart';
@@ -64,9 +65,10 @@ class _NewEventInputListState extends ConsumerState<NewEventInputList> {
         });
 
     final eventController = ref.read(eventControllerProvider.notifier);
-
     for (Event event in eventsList) {
       event.id = uuid.v4();
+      event.eventDate = DateFormat('dd/MM/yyyy')
+          .parse(event.eventDay != '' ? event.eventDay! : '');
       await eventController.postEvent(event);
     }
 
@@ -133,8 +135,8 @@ class _NewEventInputListState extends ConsumerState<NewEventInputList> {
     groups.whenData((data) => userGroups = data);
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.secondaryFixed,
       appBar: CustomAppBar(title: "Inserir eventos", showDefaultActions: false),
-      backgroundColor: Theme.of(context).colorScheme.primaryFixedDim,
       floatingActionButton: Visibility(
         visible: eventsList.isNotEmpty,
         child: FloatingActionButton(
@@ -166,7 +168,7 @@ class _NewEventInputListState extends ConsumerState<NewEventInputList> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                "Grupo: ",
+                                "Naipe: ",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleLarge!
@@ -198,7 +200,7 @@ class _NewEventInputListState extends ConsumerState<NewEventInputList> {
                         visible: userGroups.length > 1,
                         child: DropdownButtonFormField<String>(
                           decoration: InputDecoration(
-                            labelText: 'Grupo',
+                            labelText: 'Naipe',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide: BorderSide(
@@ -301,6 +303,12 @@ class _NewEventInputListState extends ConsumerState<NewEventInputList> {
                           event: eventsList[index],
                           onSelectEvent: (event) {
                             selectEvent(context, event);
+                          },
+                          onEditEvent: (event) {
+                            selectEvent(context, event);
+                          },
+                          onDeleteEvent: (event) {
+                            eventsList.remove(event);
                           },
                         ),
                       ),

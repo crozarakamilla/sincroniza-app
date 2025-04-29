@@ -26,6 +26,7 @@ class AditionalUserInfoController extends _$AditionalUserInfoController {
     await ref
         .read(aditionalUserInfoRepositoryProvider)
         .saveUserData(name, uid: uid);
+
     ref.invalidateSelf();
   }
 }

@@ -8,7 +8,7 @@ class ChooseNewEventInputType extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Theme.of(context).colorScheme.primaryFixedDim,
+      backgroundColor: Theme.of(context).colorScheme.secondaryFixed,
       title: Text(
         "Como gostaria de adicionar eventos?",
         textAlign: TextAlign.center,
@@ -28,7 +28,7 @@ class ChooseNewEventInputType extends StatelessWidget {
               selectInputType(context, "single");
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
+              backgroundColor: Theme.of(context).colorScheme.secondary,
             ),
             child: Text(
               'Único evento',
@@ -43,7 +43,7 @@ class ChooseNewEventInputType extends StatelessWidget {
               selectInputType(context, "list");
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
+              backgroundColor: Theme.of(context).colorScheme.secondary,
             ),
             child: Text(
               'Lista de eventos',

@@ -3,9 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sincroniza/controllers/events/event_controller.dart';
 import 'package:sincroniza/models/app_user.dart';
 
+import '../../controllers/events/users_in_event_controller.dart';
 import '../../controllers/groups/users_in_group_controller.dart';
+import '../../widgets/add_users_to_event.dart';
 import '../../widgets/loading_widget.dart';
-import '../../widgets/users_in_group.dart';
 
 class AddParticipantToEventScreen extends ConsumerStatefulWidget {
   const AddParticipantToEventScreen({
@@ -29,13 +30,19 @@ class _AddParticipantToEventScreenState
   TextEditingController _searchController = TextEditingController();
   String? selectedUser;
   List<String> usersToAdd = [];
+  List<String> usersPresentInEvent = [];
 
   void addUserToEvent(String userId) {
     if (usersToAdd.contains(userId)) {
       usersToAdd.remove(userId);
-      return;
+    } else if (!usersPresentInEvent.contains(userId)) {
+      usersToAdd.add(userId);
     }
-    usersToAdd.add(userId);
+    if (usersPresentInEvent.contains(userId)) {
+      usersPresentInEvent.remove(userId);
+    } else {
+      usersPresentInEvent.add(userId);
+    }
   }
 
   void _saveUsers(BuildContext context) async {
@@ -47,13 +54,20 @@ class _AddParticipantToEventScreenState
             child: CircularProgressIndicator(),
           );
         });
+
+    for (String existingUserId in usersPresentInEvent) {
+      if (!usersToAdd.contains(existingUserId)) {
+        usersToAdd.add(existingUserId);
+      }
+    }
+
     await ref
         .read(eventControllerProvider.notifier)
         .addUserToEvent(widget.eventId, usersToAdd);
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Usuários adicionados!'),
+          content: Text('Participantes atualizados!'),
         ),
       );
 
@@ -73,6 +87,16 @@ class _AddParticipantToEventScreenState
 
   @override
   Widget build(BuildContext context) {
+    final usersInEvent =
+        ref.watch(usersInEventControllerProvider(widget.eventId));
+
+    usersInEvent.whenData((data) {
+      for (AppUser user in data) {
+        if (!usersPresentInEvent.contains(user.uid)) {
+          usersPresentInEvent.add(user.uid);
+        }
+      }
+    });
     final users = ref.watch(usersInGroupControllerProvider(widget.groupId));
     return users.when(data: (List<AppUser> availableUsers) {
       final filteredUsers = availableUsers.where((user) {
@@ -95,14 +119,14 @@ class _AddParticipantToEventScreenState
                 title: Text(
                   'Adicionar Participantes',
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: Theme.of(context).colorScheme.primaryContainer,
+                        color: Theme.of(context).colorScheme.onPrimary,
                         fontWeight: FontWeight.bold,
                       ),
                 ),
                 iconTheme: IconThemeData(
-                  color: Theme.of(context).colorScheme.primaryContainer,
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
-                backgroundColor: Theme.of(context).colorScheme.primary,
+                backgroundColor: Theme.of(context).colorScheme.secondary,
                 actions: [
                   IconButton(
                     icon: Icon(
@@ -121,7 +145,7 @@ class _AddParticipantToEventScreenState
                 ],
               )
             : null,
-        backgroundColor: Theme.of(context).colorScheme.primaryFixedDim,
+        backgroundColor: Theme.of(context).colorScheme.secondaryFixed,
         body: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -142,19 +166,19 @@ class _AddParticipantToEventScreenState
                         borderRadius:
                             BorderRadius.circular(10), // Rounded corners
                         borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.primary),
+                            color: Theme.of(context).colorScheme.secondary),
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.primary,
+                            color: Theme.of(context).colorScheme.secondary,
                             width: 2), // Focus effect
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.primary),
+                            color: Theme.of(context).colorScheme.secondary),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                           vertical: 5, horizontal: 10),
@@ -167,9 +191,10 @@ class _AddParticipantToEventScreenState
                             }
                           });
                         },
-                        child: const Icon(
+                        child: Icon(
                           Icons.arrow_back,
                           weight: 20,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
                       ),
                     ),
@@ -185,9 +210,10 @@ class _AddParticipantToEventScreenState
                   ),
                 ),
               ),
-              UsersInGroup(
+              AddUsersToEvent(
                 users: filteredUsers,
                 onUsertap: addUserToEvent,
+                usersInEvent: usersPresentInEvent,
               ),
             ],
           ),

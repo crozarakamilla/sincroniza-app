@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sincroniza/controllers/menu/menu_controller.dart';
-import 'package:sincroniza/screens/calendar_screen.dart';
+import 'package:sincroniza/screens/calendar/calendar_screen.dart';
 import 'package:sincroniza/screens/events/events_screen.dart';
 import 'package:sincroniza/screens/groups/groups_screen.dart';
+import 'package:sincroniza/screens/leaves/leaves_screen.dart';
 import 'package:sincroniza/widgets/custom_app_bar.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -25,6 +26,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     ref.read(screenNameControllerProvider.notifier).changeScreenName('events');
+
     String activePageTitle = 'Eventos';
     Widget activePage = const EventsScreen();
 
@@ -39,7 +41,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ref
           .read(screenNameControllerProvider.notifier)
           .changeScreenName('groups');
-      activePageTitle = 'Grupos';
+      activePageTitle = 'Naipes';
       activePage = const GroupsScreen();
     }
 
@@ -55,7 +57,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           .read(screenNameControllerProvider.notifier)
           .changeScreenName('leaves');
       activePageTitle = 'Licenças';
-      activePage = const CalendarScreen();
+      activePage = const LeavesScreen();
     }
 
     return Scaffold(
@@ -67,17 +69,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedPageIndex,
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
         unselectedIconTheme: IconThemeData(
           color: Theme.of(context).colorScheme.onPrimary,
           opacity: 1,
         ),
         unselectedItemColor: Theme.of(context).colorScheme.onPrimary,
-        selectedItemColor: Theme.of(context).colorScheme.secondary,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
         selectedIconTheme: IconThemeData(
-          color: Theme.of(context).colorScheme.secondary,
+          color: Theme.of(context).colorScheme.primary,
           opacity: 1,
-          size: 30,
+          size: 35,
         ),
         selectedLabelStyle: TextStyle(
           color: Theme.of(context).colorScheme.secondary,
@@ -95,7 +97,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             icon: Icon(
               Icons.groups,
             ),
-            label: "Grupos",
+            label: "Naipes",
           ),
           BottomNavigationBarItem(
             icon: Icon(

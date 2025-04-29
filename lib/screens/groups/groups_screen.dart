@@ -27,6 +27,7 @@ class GroupsScreen extends ConsumerWidget {
     return groups.when(data: (List<Group> groups) {
       if (groups.isEmpty) {
         return Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.secondaryFixed,
           body: Padding(
             padding: const EdgeInsets.all(18),
             child: Center(
@@ -34,7 +35,7 @@ class GroupsScreen extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Você ainda não participa de nenhum grupo!',
+                    'Você ainda não participa de nenhum naipe!',
                     style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontSize: 32,
@@ -43,7 +44,7 @@ class GroupsScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Crie um grupo ou aceite o convite para participar de um.',
+                    'Crie um novo naipe ou aceite o convite para participar de um.',
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                         ),
@@ -67,6 +68,7 @@ class GroupsScreen extends ConsumerWidget {
         );
       }
       return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.secondaryFixed,
         body: ListView.builder(
           itemCount: groups.length,
           itemBuilder: (ctx, index) => GroupCard(
@@ -77,6 +79,7 @@ class GroupsScreen extends ConsumerWidget {
           ),
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).colorScheme.secondary,
           onPressed: () {
             showModalBottomSheet(
                 context: context,
@@ -86,11 +89,15 @@ class GroupsScreen extends ConsumerWidget {
                   return const NewGroupScreen();
                 });
           },
-          child: const Icon(Icons.add),
+          child: Icon(
+            Icons.add,
+            color: Theme.of(context).colorScheme.onSecondary,
+          ),
         ),
       );
     }, error: (Object error, StackTrace stackTrace) {
       return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.secondaryFixed,
         body: Padding(
           padding: const EdgeInsets.all(18),
           child: Center(

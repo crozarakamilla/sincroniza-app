@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 
@@ -12,6 +13,8 @@ class Event with _$Event {
     String? id,
     String? title,
     String? eventDay,
+    @JsonKey(fromJson: _fromTimestamp, toJson: _toTimestamp)
+    DateTime? eventDate,
     String? startTime,
     String? location,
     String? category,
@@ -34,4 +37,12 @@ class Event with _$Event {
   }
 
   factory Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);
+}
+
+DateTime? _fromTimestamp(Timestamp? timestamp) {
+  return timestamp?.toDate();
+}
+
+Timestamp? _toTimestamp(DateTime? date) {
+  return date != null ? Timestamp.fromDate(date) : null;
 }

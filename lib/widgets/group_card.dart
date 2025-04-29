@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sincroniza/models/enums.dart';
 import 'package:sincroniza/models/group.dart';
-
-import '../controllers/configs/category_provider.dart';
-import '../models/category.dart';
 
 class GroupCard extends ConsumerWidget {
   const GroupCard({
@@ -18,9 +14,6 @@ class GroupCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Map<CategoryEnum, Category> categoriesValues =
-        ref.read(categoriesProvider);
-
     return Card(
       margin: const EdgeInsets.all(8),
       shape: RoundedRectangleBorder(

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sincroniza/controllers/menu/menu_controller.dart';
 
 import '../controllers/users/firebase_auth_controller.dart';
+import '../screens/calendar/filter_screen.dart';
 
 class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
   CustomAppBar({
@@ -22,10 +23,24 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
     List<Widget> actions = showDefaultActions
         ? [
             InkWell(
-              onTap: () {},
+              onTap: () {
+                showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: false,
+                    useSafeArea: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20.0),
+                      ),
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    builder: (BuildContext context) {
+                      return const FilterScreen();
+                    });
+              },
               child: Icon(
                 Icons.filter_alt_sharp,
-                color: Theme.of(context).colorScheme.surfaceBright,
+                color: Theme.of(context).colorScheme.onPrimary,
               ),
             ),
             Padding(
@@ -57,14 +72,14 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
       title: Text(
         title,
         style: Theme.of(context).textTheme.titleLarge!.copyWith(
-              color: Theme.of(context).colorScheme.primaryContainer,
+              color: Theme.of(context).colorScheme.onPrimary,
               fontWeight: FontWeight.bold,
             ),
       ),
       actions: actions,
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.secondary,
       iconTheme: IconThemeData(
-        color: Theme.of(context).colorScheme.primaryContainer,
+        color: Theme.of(context).colorScheme.onPrimary,
       ),
     );
   }

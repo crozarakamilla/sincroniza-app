@@ -6,7 +6,7 @@ class LoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primaryFixedDim,
+      backgroundColor: Theme.of(context).colorScheme.secondaryFixed,
       body: Center(
         child: CircularProgressIndicator(
           color: Theme.of(context).colorScheme.secondary,

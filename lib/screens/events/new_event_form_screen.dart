@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:sincroniza/controllers/events/event_controller.dart';
 import 'package:sincroniza/controllers/groups/user_groups_controller.dart';
 import 'package:sincroniza/models/category.dart';
-import 'package:sincroniza/models/enums.dart';
 import 'package:sincroniza/models/event.dart';
 import 'package:sincroniza/routing/app_route_enum.dart';
 import 'package:sincroniza/widgets/add_program_widget.dart';
@@ -29,8 +28,6 @@ enum DateType { startDate, endDate, eventDay }
 
 class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
   final _form = GlobalKey<FormState>();
-  final TextEditingController _startDateController = TextEditingController();
-  final TextEditingController _endDateController = TextEditingController();
   final TextEditingController _eventDayController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
   BuildContext? _progressIndicatorContext;
@@ -41,6 +38,7 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
 
   var title;
   var eventDay;
+  var eventDate;
   var startDate;
   var endDate;
   var startTime;
@@ -65,25 +63,13 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
 
     FocusScope.of(context).unfocus();
 
-    startDate = DateFormat('dd/MM/yyyy').parse(_startDateController.text);
-    endDate = DateFormat('dd/MM/yyyy').parse(_endDateController.text);
-    _eventDayController.text;
-    startTime = DateFormat('HH:mm').parse(startTime);
-
-    DateTime startDateTime = DateTime(
-      startDate.year,
-      startDate.month,
-      startDate.day,
-      startTime.hour,
-      startTime.minute,
-    );
-
     Event newEvent = Event(
       id: uuid.v4(),
       title: title,
       eventDay: eventDay,
+      eventDate: DateFormat('dd/MM/yyyy').parse(eventDay != '' ? eventDay : ''),
       startTime: startTime,
-      rehearsalsQuantity: rehearsals,
+      rehearsalsQuantity: rehearsals != null ? rehearsals : '0',
       location: location,
       conductor: conductor,
       soloist: soloist,
@@ -152,9 +138,7 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
   @override
   void dispose() {
     _timeController.dispose();
-    _endDateController.dispose();
     _eventDayController.dispose();
-    _startDateController.dispose();
 
     if (_progressIndicatorContext != null &&
         _progressIndicatorContext!.mounted) {
@@ -166,7 +150,7 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Map<CategoryEnum, Category> categories = ref.read(categoriesProvider);
+    final Map<String, Category> categories = ref.read(categoriesProvider);
     final groups = ref.watch(userGroupsControllerProvider(
         ref.read(authRepositoryProvider).currentUser!.uid));
 
@@ -208,7 +192,7 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
         title: 'Novo Evento',
         showDefaultActions: false,
       ),
-      backgroundColor: Theme.of(context).colorScheme.primaryFixedDim,
+      backgroundColor: Theme.of(context).colorScheme.secondaryFixed,
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: SingleChildScrollView(
@@ -228,7 +212,7 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              "Grupo: ",
+                              "Naipe: ",
                               style: Theme.of(context)
                                   .textTheme
                                   .titleLarge!
@@ -237,7 +221,7 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
                                           .colorScheme
                                           .onSurface,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 18),
+                                      fontSize: 20),
                             ),
                             Text(
                               userGroups.length == 1
@@ -247,10 +231,11 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
                                   .textTheme
                                   .titleLarge!
                                   .copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontSize: 16),
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                           ],
                         ),
@@ -260,29 +245,27 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
                       visible: userGroups.length > 1,
                       child: DropdownButtonFormField<String>(
                         decoration: InputDecoration(
-                          labelText: 'Grupo',
+                          labelText: 'Naipe',
+                          fillColor: Theme.of(context).colorScheme.onSecondary,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .surfaceContainer),
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary),
                           ),
                           floatingLabelBehavior: FloatingLabelBehavior.never,
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .surfaceContainer,
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary,
                                 width: 2), // Focus effect
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .surfaceContainer),
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary),
                           ),
                           contentPadding: const EdgeInsets.symmetric(
                               vertical: 15, horizontal: 5),
@@ -314,29 +297,24 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
                     TextFormField(
                       decoration: InputDecoration(
                         labelText: 'Nome',
+                        fillColor: Theme.of(context).colorScheme.onSecondary,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           // Rounded corners
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
+                              color: Theme.of(context).colorScheme.onSecondary),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.never,
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
+                              color: Theme.of(context).colorScheme.onSecondary,
                               width: 2), // Focus effect
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
+                              color: Theme.of(context).colorScheme.onSecondary),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
                             vertical: 15, horizontal: 20),
@@ -363,28 +341,23 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
                     DropdownButtonFormField<String>(
                       decoration: InputDecoration(
                         labelText: 'Categoria',
+                        fillColor: Theme.of(context).colorScheme.onSecondary,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
+                              color: Theme.of(context).colorScheme.onSecondary),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.never,
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
+                              color: Theme.of(context).colorScheme.onSecondary,
                               width: 2), // Focus effect
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
+                              color: Theme.of(context).colorScheme.onSecondary),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
                             vertical: 15, horizontal: 5),
@@ -392,7 +365,7 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
                       value: category,
                       items: categories.entries.map((entry) {
                         return DropdownMenuItem<String>(
-                          value: entry.key.name,
+                          value: entry.key,
                           child: Text(entry.value.name),
                         );
                       }).toList(),
@@ -415,29 +388,24 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
                     TextFormField(
                       decoration: InputDecoration(
                         labelText: 'Quantidade de ensaios',
+                        fillColor: Theme.of(context).colorScheme.onSecondary,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           // Rounded corners
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
+                              color: Theme.of(context).colorScheme.onSecondary),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.never,
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
+                              color: Theme.of(context).colorScheme.onSecondary,
                               width: 2), // Focus effect
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
+                              color: Theme.of(context).colorScheme.onSecondary),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
                             vertical: 15, horizontal: 20),
@@ -447,9 +415,7 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
                       textCapitalization: TextCapitalization.sentences,
                       enableSuggestions: true,
                       validator: (value) {
-                        if (value == null ||
-                            value.trim().isEmpty ||
-                            value.length < 4) {
+                        if (value == null) {
                           return 'Por favor, insira um nome válido.';
                         }
                         return null;
@@ -470,29 +436,24 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
                       },
                       decoration: InputDecoration(
                         labelText: 'Dia do evento',
+                        fillColor: Theme.of(context).colorScheme.onSecondary,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           // Rounded corners
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
+                              color: Theme.of(context).colorScheme.onSecondary),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.never,
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
+                              color: Theme.of(context).colorScheme.onSecondary,
                               width: 2), // Focus effect
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
+                              color: Theme.of(context).colorScheme.onSecondary),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
                             vertical: 15, horizontal: 20),
@@ -515,29 +476,24 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
                       },
                       decoration: InputDecoration(
                         labelText: 'Horário do evento',
+                        fillColor: Theme.of(context).colorScheme.onSecondary,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           // Rounded corners
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
+                              color: Theme.of(context).colorScheme.onSecondary),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.never,
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
+                              color: Theme.of(context).colorScheme.onSecondary,
                               width: 2), // Focus effect
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
+                              color: Theme.of(context).colorScheme.onSecondary),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
                             vertical: 15, horizontal: 20),
@@ -563,29 +519,24 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
                     TextFormField(
                       decoration: InputDecoration(
                         labelText: 'Local do evento',
+                        fillColor: Theme.of(context).colorScheme.onSecondary,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           // Rounded corners
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
+                              color: Theme.of(context).colorScheme.onSecondary),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.never,
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
+                              color: Theme.of(context).colorScheme.onSecondary,
                               width: 2), // Focus effect
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
+                              color: Theme.of(context).colorScheme.onSecondary),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
                             vertical: 15, horizontal: 20),
@@ -612,29 +563,24 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
                     TextFormField(
                       decoration: InputDecoration(
                         labelText: 'Regente',
+                        fillColor: Theme.of(context).colorScheme.onSecondary,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           // Rounded corners
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
+                              color: Theme.of(context).colorScheme.onSecondary),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.never,
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
+                              color: Theme.of(context).colorScheme.onSecondary,
                               width: 2), // Focus effect
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
+                              color: Theme.of(context).colorScheme.onSecondary),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
                             vertical: 15, horizontal: 20),
@@ -653,29 +599,24 @@ class _NewEventScreenState extends ConsumerState<NewEventFormScreen> {
                     TextFormField(
                       decoration: InputDecoration(
                         labelText: 'Solista(s)',
+                        fillColor: Theme.of(context).colorScheme.onSecondary,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           // Rounded corners
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
+                              color: Theme.of(context).colorScheme.onSecondary),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.never,
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
+                              color: Theme.of(context).colorScheme.onSecondary,
                               width: 2), // Focus effect
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer),
+                              color: Theme.of(context).colorScheme.onSecondary),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
                             vertical: 15, horizontal: 20),

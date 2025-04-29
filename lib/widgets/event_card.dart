@@ -7,31 +7,39 @@ import '../controllers/configs/category_provider.dart';
 import '../models/category.dart';
 
 class EventCard extends ConsumerWidget {
-  const EventCard({
-    super.key,
-    required this.event,
-    required this.onSelectEvent,
-  });
+  EventCard(
+      {super.key,
+      required this.event,
+      required this.onEditEvent,
+      required this.onSelectEvent,
+      this.onAddParticipants,
+      required this.onDeleteEvent});
 
   final Event event;
+  final void Function(Event event) onEditEvent;
   final void Function(Event event) onSelectEvent;
+  void Function(Event event)? onAddParticipants;
+  final void Function(Event event) onDeleteEvent;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Map<CategoryEnum, Category> categoriesValues =
-        ref.read(categoriesProvider);
+    final Map<String, Category> categoriesValues = ref.read(categoriesProvider);
 
-    return Card(
-      margin: const EdgeInsets.all(8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5),
-      ),
-      clipBehavior: Clip.hardEdge,
-      elevation: 2,
-      child: InkWell(
-        onTap: () {
-          onSelectEvent(event);
-        },
+    return InkWell(
+      onTap: () {
+        onSelectEvent(event);
+      },
+      child: Card(
+        margin: const EdgeInsets.all(8),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+          side: BorderSide(
+            color: Theme.of(context).colorScheme.primary,
+            width: 1.0,
+          ),
+        ),
+        clipBehavior: Clip.hardEdge,
+        elevation: 4,
         child: Container(
           padding: const EdgeInsets.all(10),
           child: Column(
@@ -42,6 +50,7 @@ class EventCard extends ConsumerWidget {
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       color: Theme.of(context).colorScheme.surfaceTint,
                       fontWeight: FontWeight.w900,
+                      fontSize: 18,
                     ),
               ),
               const SizedBox(
@@ -62,8 +71,8 @@ class EventCard extends ConsumerWidget {
                   ),
                   Text(
                     categoriesValues[event.category == 'oficial'
-                            ? CategoryEnum.oficial
-                            : CategoryEnum.extraordinario]!
+                            ? CategoryEnum.oficial.name
+                            : CategoryEnum.extraordinario.name]!
                         .name,
                     style: Theme.of(context).textTheme.titleSmall!.copyWith(
                           color: Theme.of(context).colorScheme.surfaceTint,
@@ -104,6 +113,60 @@ class EventCard extends ConsumerWidget {
                   Text(event.location!)
                 ],
               ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Divider(
+                      color: Theme.of(context).colorScheme.secondary,
+                      thickness: 0.7,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      onAddParticipants!(event);
+                    },
+                    style: IconButton.styleFrom(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondaryFixed),
+                    icon: Icon(
+                      Icons.group_add,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      onEditEvent(event);
+                    },
+                    style: IconButton.styleFrom(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondaryFixed),
+                    icon: Icon(
+                      Icons.edit,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      onDeleteEvent(event);
+                    },
+                    style: IconButton.styleFrom(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondaryFixed),
+                    icon: Icon(
+                      Icons.delete_forever,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         ),

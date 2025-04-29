@@ -54,7 +54,7 @@ class _NewGroupScreenState extends ConsumerState<NewGroupScreen> {
     await groupController.postGroup(newGroup);
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Grupo adicionado!')),
+        const SnackBar(content: Text('Naipe adicionado!')),
       );
       Navigator.of(context).pop();
     }
@@ -119,10 +119,10 @@ class _NewGroupScreenState extends ConsumerState<NewGroupScreen> {
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Novo Grupo',
+        title: 'Novo Naipe',
         showDefaultActions: false,
       ),
-      backgroundColor: Theme.of(context).colorScheme.primaryFixedDim,
+      backgroundColor: Theme.of(context).colorScheme.secondaryFixed,
       body: Padding(
         padding:
             const EdgeInsets.only(top: 30, left: 10, right: 10, bottom: 10),
@@ -138,6 +138,7 @@ class _NewGroupScreenState extends ConsumerState<NewGroupScreen> {
                     TextFormField(
                       decoration: InputDecoration(
                         labelText: 'Nome',
+                        fillColor: Theme.of(context).colorScheme.onSecondary,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           // Rounded corners
@@ -150,9 +151,7 @@ class _NewGroupScreenState extends ConsumerState<NewGroupScreen> {
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainer,
+                              color: Theme.of(context).colorScheme.onSecondary,
                               width: 2), // Focus effect
                         ),
                         enabledBorder: OutlineInputBorder(
@@ -197,7 +196,7 @@ class _NewGroupScreenState extends ConsumerState<NewGroupScreen> {
                             ),
                       ),
                       subtitle: Text(
-                        'Incluir instrumentação quando adicionar membros a eventos do grupo.',
+                        'Incluir instrumentação quando adicionar membros a eventos do naipe.',
                         style:
                             Theme.of(context).textTheme.labelMedium!.copyWith(
                                   color: Theme.of(context).colorScheme.primary,
@@ -221,7 +220,8 @@ class _NewGroupScreenState extends ConsumerState<NewGroupScreen> {
                     ElevatedButton(
                       onPressed: _submit,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondary,
                       ),
                       child: Text(
                         'Adicionar',
@@ -229,8 +229,7 @@ class _NewGroupScreenState extends ConsumerState<NewGroupScreen> {
                             .textTheme
                             .titleMedium!
                             .copyWith(
-                              color:
-                                  Theme.of(context).colorScheme.surfaceBright,
+                              color: Theme.of(context).colorScheme.onSecondary,
                               fontWeight: FontWeight.bold,
                             ),
                       ),

@@ -24,6 +24,14 @@ class _EventDetailsListState extends State<EventDetailsList> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
+        Text(
+          'Programação:',
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 18.0,
+              ),
+        ),
         ...visibleItems.map(
           (item) => Padding(
             padding: const EdgeInsets.symmetric(vertical: 2.0),

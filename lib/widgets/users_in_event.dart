@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:sincroniza/widgets/work_percentage_widget.dart';
 
 import '../models/app_user.dart';
 
@@ -16,90 +16,60 @@ class UsersInEvent extends StatelessWidget {
         itemBuilder: (ctx, index) => Card(
           child: Padding(
             padding: const EdgeInsets.all(5),
-            child: Row(
-              spacing: 4,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
-                  backgroundColor: Theme.of(context).colorScheme.primaryFixed,
-                  radius: 20,
-                  backgroundImage: AssetImage('assets/images/user.png'),
-                ),
-                const SizedBox(
-                  width: 8,
+                Row(
+                  spacing: 4,
+                  children: [
+                    CircleAvatar(
+                      backgroundColor:
+                          Theme.of(context).colorScheme.primaryFixed,
+                      radius: 20,
+                      backgroundImage: users[index].photoUrl != ""
+                          ? NetworkImage(users[index].photoUrl!)
+                          : AssetImage('assets/images/user.png'),
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                      users[index].name,
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    WorkPercentageWidget(userId: users[index].uid),
+                  ],
                 ),
                 Text(
-                  users[index].name,
+                  index + 1 > 2
+                      ? "2ª estante"
+                      : index + 1 > 4
+                          ? "3ª estante"
+                          : index + 1 > 6
+                              ? "4ª estante"
+                              : index + 1 > 8
+                                  ? "5ª estante"
+                                  : index + 1 > 10
+                                      ? "6ª estante"
+                                      : index + 1 > 12
+                                          ? "7ª estante"
+                                          : index + 1 > 14
+                                              ? "8ª estante"
+                                              : index + 1 > 16
+                                                  ? "9ª estante"
+                                                  : "1ª estante",
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
+                        color: Theme.of(context).colorScheme.secondary,
                         fontWeight: FontWeight.bold,
                       ),
                 ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      CircularPercentIndicator(
-                        radius: 25.0,
-                        lineWidth: 5.0,
-                        animation: true,
-                        percent: 0.7,
-                        center: Text(
-                          "70.0%",
-                          style:
-                              Theme.of(context).textTheme.titleMedium!.copyWith(
-                                    color: Theme.of(context).colorScheme.error,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 10.0,
-                                  ),
-                        ),
-                        footer: Text(
-                          "Oficiais",
-                          style:
-                              Theme.of(context).textTheme.titleMedium!.copyWith(
-                                    color: Theme.of(context).colorScheme.error,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 8.0,
-                                  ),
-                        ),
-                        circularStrokeCap: CircularStrokeCap.round,
-                        progressColor: Theme.of(context).colorScheme.error,
-                      ),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      CircularPercentIndicator(
-                        radius: 25.0,
-                        animation: true,
-                        animationDuration: 1200,
-                        lineWidth: 5.0,
-                        percent: 0.4,
-                        center: Text(
-                          "1",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 13.0),
-                        ),
-                        footer: Text(
-                          "Extraordinários",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(
-                                color: Theme.of(context).colorScheme.secondary,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 8.0,
-                              ),
-                        ),
-                        circularStrokeCap: CircularStrokeCap.butt,
-                        backgroundColor:
-                            Theme.of(context).colorScheme.inversePrimary,
-                        progressColor: Theme.of(context).colorScheme.secondary,
-                      ),
-                    ],
-                  ),
-                )
               ],
             ),
           ),

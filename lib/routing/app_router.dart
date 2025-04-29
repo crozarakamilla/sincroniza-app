@@ -11,6 +11,7 @@ import 'package:sincroniza/screens/users/auth_screen.dart';
 import 'package:sincroniza/screens/users/sign_up_screen.dart';
 
 import '../repositories/user/firebase_auth_repository.dart';
+import '../utils/initial_setup.dart';
 import 'app_route_enum.dart';
 
 part 'app_router.g.dart';
@@ -73,7 +74,12 @@ GoRouter router(Ref ref) {
       final bool isLoggingIn = state.matchedLocation == AppRoutes.signIn.path ||
           state.matchedLocation == AppRoutes.signUp.path;
 
-      // should redirect the user to the sign in page if they are not logged in
+      if (isLoggedIn) {
+        await ref.watch(initialSetupProvider.future);
+      }
+
+      // should redirect t:w
+      // he user to the sign in page if they are not logged in
       if (!isLoggedIn && !isLoggingIn) {
         return AppRoutes.signIn.path;
       }
